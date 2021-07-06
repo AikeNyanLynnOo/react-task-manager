@@ -7,82 +7,131 @@ import {
   CardSubtitle,
   CardTitle,
   Button,
-  ButtonGroup,
   Input,
   List,
+  Breadcrumb,
+  BreadcrumbItem,
 } from "reactstrap";
-
+import ToastGenerator from "./ToastGeneratorComponent";
+import TaskEditModal from "./TaskEditModalComponent";
+import { Link } from "react-router-dom";
+export const renderComments = (comments) => {
+  return (
+    <List type="unstyled" className="my-comment-list">
+      {comments.map((comment, index) => {
+        return (
+          <li className="p-3 my-3 my-comment" key={index}>
+            {comment}
+          </li>
+        );
+      })}
+    </List>
+  );
+};
 class TaskDetail extends React.Component {
-  renderComments = (comments) => {
-    return (
-      <List type="unstyled">
-        {comments.map((comment) => {
-          return <li className="p-3 my-3 my-comment">{comment}</li>;
-        })}
-      </List>
-    );
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      prev: this.props.history.location.state.prev,
+      toastOpen: false,
+      isOpen: false,
+    };
+    this.toggleToast = this.toggleToast.bind(this);
+    this.toggle = this.toggle.bind(this);
+  }
+  toggleToast() {
+    this.setState({ toastOpen: !this.state.toastOpen });
+  }
+
+  toggle() {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
+  }
 
   render() {
     return (
-      <Row>
-        <Col lg={8} className="mx-auto">
-          <Card>
-            <CardBody>
-              <CardTitle tag="h5" className="my-3">
-                {this.props.task.title}{" "}
-                <Input
-                  type="checkbox"
-                  name="completeTask"
-                  id="completeTask"
-                  className="ms-3"
-                ></Input>
-              </CardTitle>
-              <CardSubtitle tag="h6" className="my-3">
-                <span className="badge bg-primary me-1">
-                  {this.props.task.priority}
-                </span>
-                {this.props.task.label && (
-                  <span className="badge bg-primary me-1">
-                    {this.props.task.label}
-                  </span>
+      <Fragment>
+        <ToastGenerator
+          toastOpen={this.state.toastOpen}
+          toggleToast={this.toggleToast}
+          selected={this.props.task}
+        />
+        <TaskEditModal
+          isOpen={this.state.isOpen}
+          toggle={this.toggle}
+          task={this.props.task}
+        />
+        <Row>
+          <Col lg={8} className="mx-auto">
+            <Breadcrumb className="my-breadcrumb">
+              <BreadcrumbItem>
+                {this.state.prev && this.state.prev === "/home" && (
+                  <Link to="/home">Home</Link>
                 )}
-                {this.props.task.project && (
-                  <span className="badge bg-primary me-1">
-                    {this.props.task.project}
-                  </span>
+                {this.state.prev && this.state.prev === "/tasks" && (
+                  <Link to="/tasks">Tasks</Link>
                 )}
-              </CardSubtitle>
-              <Row className="my-3">
-                <Col md={5}>
-                  <span>
-                    <i className="fa fa-calendar"></i> {this.props.task.dueDate}{" "}
+              </BreadcrumbItem>
+              <BreadcrumbItem active>{this.props.task.title}</BreadcrumbItem>
+            </Breadcrumb>
+          </Col>
+          <Col lg={8} className="mx-auto">
+            <Card>
+              <CardBody>
+                <CardTitle tag="h5" className="my-3">
+                  {this.props.task.title}{" "}
+                  <Input
+                    type="checkbox"
+                    name="completeTask"
+                    id="completeTask"
+                    className="ms-3"
+                    checked={this.state.toastOpen}
+                    onChange={this.toggleToast}
+                  ></Input>
+                </CardTitle>
+                <CardSubtitle tag="h6" className="my-3">
+                  <span className="badge bg-primary me-1">
+                    {this.props.task.priority}
                   </span>
-                  <span>
-                    <i className="fa fa-comment"></i>{" "}
-                    {this.props.task.comments.length}
-                  </span>
-                </Col>
-                <Col md={{ size: 5, offset: 2 }} className="text-end">
-                  <ButtonGroup size="sm">
-                    <Button color="primary">
+                  {this.props.task.label && (
+                    <span className="badge bg-primary me-1">
+                      {this.props.task.label}
+                    </span>
+                  )}
+                  {this.props.task.project && (
+                    <span className="badge bg-primary me-1">
+                      {this.props.task.project}
+                    </span>
+                  )}
+                </CardSubtitle>
+                <Row className="my-3">
+                  <Col md={5} className="mb-2">
+                    <span>
+                      <i className="fa fa-calendar"></i>{" "}
+                      {this.props.task.dueDate}{" "}
+                    </span>
+                    <span>
+                      <i className="fa fa-comment"></i>{" "}
+                      {this.props.task.comments.length}
+                    </span>
+                  </Col>
+                  <Col md={{ size: 5, offset: 2 }} className="text-sm-end">
+                    <Button color="primary" size="sm" onClick={this.toggle}>
                       <i className="fa fa-pencil"></i>
                     </Button>
-                    <Button color="danger">
-                      <i className="fa fa-trash"></i>
-                    </Button>
-                  </ButtonGroup>
-                </Col>
-              </Row>
-              <hr />
-              <Row>
-                <h6>Comments</h6>
-                {this.renderComments(this.props.task.comments)}
-              </Row>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
+                  </Col>
+                </Row>
+                <hr />
+                <Row>
+                  <h6>Comments</h6>
+                  {renderComments(this.props.task.comments)}
+                </Row>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </Fragment>
     );
   }
 }

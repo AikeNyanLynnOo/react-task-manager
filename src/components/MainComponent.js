@@ -11,9 +11,12 @@ class Main extends React.Component {
     const TaskWithId = ({ match, location, history }) => {
       return (
         <TaskDetail
-          task={tasks.filter(
-            (task) => task.id === parseInt(match.params.taskId, 10)
-          )[0]}
+          task={
+            tasks.filter(
+              (task) => task.id === parseInt(match.params.taskId, 10)
+            )[0]
+          }
+          history={history}
         ></TaskDetail>
       );
     };
@@ -26,7 +29,11 @@ class Main extends React.Component {
               path="/home"
               component={() => <Home tasks={tasks} />}
             ></Route>
-            <Route exact path="/tasks" component={AllTasks}></Route>
+            <Route
+              exact
+              path="/tasks"
+              component={() => <AllTasks tasks={tasks} />}
+            ></Route>
             <Route path="/tasks/:taskId" component={TaskWithId}></Route>
             <Redirect to="/home" />
           </Switch>

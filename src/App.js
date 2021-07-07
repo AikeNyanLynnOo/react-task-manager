@@ -1,11 +1,15 @@
 import { BrowserRouter } from "react-router-dom";
-import Main from "./components/MainComponent"
+import { store } from "./redux/configureStore";
+import { Provider } from "react-redux";
+import Main from "./components/MainComponent";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Main></Main>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Main></Main>
+      </BrowserRouter>
+    </Provider>
   );
 }
 export default App;

@@ -34,15 +34,15 @@ class TaskEditModal extends React.Component {
         <ModalHeader toggle={toggle}>Add New Task</ModalHeader>
         <ModalBody>
           {/* task title
-                  task description
-                  project
-                  label
-                  priority
-                  comment
-                  due date 
-                  progress
-                  remindMe
-                  */}
+              task description
+              project
+              label
+              priority
+              comment
+              due date 
+              progress
+              remindMe
+              */}
           <Form>
             <FormGroup row className="mt-3">
               <Label for="title" sm={2}>

@@ -15,13 +15,19 @@ import {
 import ToastGenerator from "./ToastGeneratorComponent";
 import TaskEditModal from "./TaskEditModalComponent";
 import { Link } from "react-router-dom";
-export const renderComments = (comments) => {
+export const renderComments = (comments, payload) => {
   return (
     <List type="unstyled" className="my-comment-list">
       {comments.map((comment, index) => {
         return (
-          <li className="p-3 my-3 my-comment" key={index}>
-            {comment}
+          <li key={index} className="d-block">
+            <p className="p-3 my-comment d-inline-block">{comment}</p>
+            {payload && payload.edit && (
+              <i
+                className="fa fa-trash ms-3 "
+                onClick={() => payload.deleteComment(comment.id)}
+              ></i>
+            )}
           </li>
         );
       })}
@@ -80,15 +86,15 @@ class TaskDetail extends React.Component {
             <Card>
               <CardBody>
                 <CardTitle tag="h5" className="my-3">
-                  {this.props.task.title}{" "}
                   <Input
                     type="checkbox"
                     name="completeTask"
                     id="completeTask"
-                    className="ms-3"
+                    className="me-3"
                     checked={this.state.toastOpen}
                     onChange={this.toggleToast}
                   ></Input>
+                  {this.props.task.title}
                 </CardTitle>
                 <CardSubtitle tag="h6" className="my-3">
                   <span className="badge bg-primary me-1">

@@ -1,12 +1,29 @@
-.my-navbar {
+.my-navbar-wrapper {
   background-color: mediumslateblue;
 }
 .my-navbar * {
   color: white;
 }
-
+.my-navbar *:hover,
+.my-navbar *:focus {
+  color: white;
+}
+.navbar-toggler {
+  border-color: white;
+}
+.navbar-toggler:focus,.navbar-toggler:active{
+  box-shadow: none;
+}
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
 .my-dropitems * {
   color: #000;
+  text-decoration: none;
+}
+.my-dropitems *:hover {
+  color: #000;
+  background-color: #ddd;
 }
 
 .form-control {
@@ -33,7 +50,8 @@
 }
 
 .my-task-list {
-  max-height: 500px;
+  margin-top: 5px;
+  max-height: 60vh;
   overflow-y: scroll;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
@@ -55,7 +73,7 @@
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
 }
-.my-comment-list{
+.my-comment-list {
   max-height: 300px;
   overflow-y: scroll;
   -ms-overflow-style: none; /* IE and Edge */

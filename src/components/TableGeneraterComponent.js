@@ -4,95 +4,23 @@ import paginationFactory from "react-bootstrap-table2-paginator";
 import React, { Fragment } from "react";
 import { Button, Progress } from "reactstrap";
 import ToastGenerator from "./ToastGeneratorComponent";
+import TaskEditModal from "./TaskEditModalComponent";
 import { Link } from "react-router-dom";
 const { SearchBar } = Search;
-const columns = [
-  {
-    dataField: "title",
-    text: "Title",
-    formatter: (rowContent, row) => {
-      return (
-        <Link to={{ pathname: `/tasks/${row.id}`, state: { prev: "/tasks" } }}>
-          {row.title}
-        </Link>
-      );
-    },
-  },
-  {
-    dataField: "project",
-    text: "Project",
-    sort: true,
-  },
-  {
-    dataField: "dueDate",
-    text: "Due Date",
-    sort: true,
-    headerStyle: (colum, colIndex) => {
-      return { width: "100px", textAlign: "center" };
-    },
-  },
-  {
-    dataField: "priority",
-    text: "Priority",
-    sort: true,
-    headerStyle: (colum, colIndex) => {
-      return { width: "80px", textAlign: "center" };
-    },
-  },
-  {
-    dataField: "label",
-    text: "Label",
-    headerStyle: (colum, colIndex) => {
-      return { width: "80px", textAlign: "center" };
-    },
-  },
-  {
-    dataField: "progress",
-    text: "Progress",
-    sort: true,
-    headerStyle: (colum, colIndex) => {
-      return { width: "100px", textAlign: "center" };
-    },
-    formatter: (rowContent, row) => {
-      return (
-        <div>
-          <div className="text-center">{row.progress}%</div>
-          <Progress
-            value={row.progress}
-            color="primary"
-            className="my-progress-bar-table"
-          />
-        </div>
-      );
-    },
-  },
-  {
-    dataField: "",
-    text: "Edit",
-    align: "left",
-    headerStyle: (colum, colIndex) => {
-      return { width: "50px", textAlign: "center" };
-    },
-    formatter: (rowContent, row) => {
-      return (
-        <Button color="info" size="sm">
-          <i className="fa fa-pencil"></i>
-        </Button>
-      );
-    },
-  },
-];
 
 class TableGenerater extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       toastOpen: false,
+      isOpen: false,
+      editTask: null,
       selected: [],
     };
     this.handleOnSelect = this.handleOnSelect.bind(this);
     this.handleOnSelectAll = this.handleOnSelectAll.bind(this);
     this.toggleToast = this.toggleToast.bind(this);
+    this.toggle = this.toggle.bind(this);
   }
   handleOnSelect(row, isSelect) {
     if (isSelect) {
@@ -132,6 +60,13 @@ class TableGenerater extends React.Component {
       toastOpen: !this.state.toastOpen,
     });
   }
+  toggle(row) {
+    row.title &&
+      this.setState({
+        editTask: row,
+      });
+    this.setState({ isOpen: !this.state.isOpen });
+  }
   render() {
     const selectRow = {
       mode: "checkbox",
@@ -141,6 +76,85 @@ class TableGenerater extends React.Component {
       onSelectAll: this.handleOnSelectAll,
       selected: [...this.state.selected.map((row) => row.id)],
     };
+    const columns = [
+      {
+        dataField: "title",
+        text: "Title",
+        formatter: (rowContent, row) => {
+          return (
+            <Link
+              to={{ pathname: `/tasks/${row.id}`, state: { prev: "/tasks" } }}
+            >
+              {row.title}
+            </Link>
+          );
+        },
+      },
+      {
+        dataField: "project",
+        text: "Project",
+        sort: true,
+      },
+      {
+        dataField: "dueDate",
+        text: "Due Date",
+        sort: true,
+        headerStyle: (colum, colIndex) => {
+          return { width: "100px", textAlign: "center" };
+        },
+      },
+      {
+        dataField: "priority",
+        text: "Priority",
+        sort: true,
+        headerStyle: (colum, colIndex) => {
+          return { width: "80px", textAlign: "center" };
+        },
+      },
+      {
+        dataField: "label",
+        text: "Label",
+        headerStyle: (colum, colIndex) => {
+          return { width: "80px", textAlign: "center" };
+        },
+      },
+      {
+        dataField: "progress",
+        text: "Progress",
+        sort: true,
+        headerStyle: (colum, colIndex) => {
+          return { width: "100px", textAlign: "center" };
+        },
+        formatter: (rowContent, row) => {
+          return (
+            <div>
+              <div className="text-center">{row.progress}%</div>
+              <Progress
+                value={row.progress}
+                color="primary"
+                className="my-progress-bar-table"
+              />
+            </div>
+          );
+        },
+      },
+      {
+        dataField: "",
+        text: "Edit",
+        align: "left",
+        headerStyle: (colum, colIndex) => {
+          return { width: "50px", textAlign: "center" };
+        },
+        formatter: (rowContent, row) => {
+          return (
+            <Button color="info" size="sm" onClick={() => this.toggle(row)}>
+              <i className="fa fa-pencil"></i>
+            </Button>
+          );
+        },
+      },
+    ];
+
     return (
       <Fragment>
         <ToastGenerator
@@ -151,6 +165,11 @@ class TableGenerater extends React.Component {
               ? { title: "All Tasks" }
               : this.state.selected[0]
           }
+        />
+        <TaskEditModal
+          toggle={this.toggle}
+          isOpen={this.state.isOpen}
+          task={this.state.editTask}
         />
         <ToolkitProvider
           keyField="id"

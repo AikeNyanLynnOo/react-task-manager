@@ -15,11 +15,8 @@ function ToastGenerator(props) {
       </Row>
       <Row className="px-3 pt-3">
         <p>
-          Are you sure to delete{" "}
-          <strong>
-            {props.selected && props.selected.title}
-          </strong>{" "}
-          ?
+          Have you completed{" "}
+          <strong>{props.selected && props.selected.title}</strong> ?
         </p>
       </Row>
       <div className="text-end pb-3 pe-3">
@@ -27,7 +24,7 @@ function ToastGenerator(props) {
           cancel
         </Button>
         <Button color="info" size="sm" onClick={props.toggleToast}>
-          Delete
+          Yes
         </Button>
       </div>
     </Toast>

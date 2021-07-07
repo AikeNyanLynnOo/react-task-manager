@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
-import { Row, Col, Card, CardTitle, CardBody, List } from "reactstrap";
+import { Row, Col, Card, CardTitle, CardBody, List, Button } from "reactstrap";
+import { Link } from "react-router-dom";
 import TaskItemPreview from "./TaskItemPreviewComponent";
-import ToastGenerator from "./ToastGeneratorComponent";
 class Home extends React.Component {
   render() {
     return (
@@ -22,7 +22,7 @@ class Home extends React.Component {
               </CardBody>
             </Card>
           </Col>
-          <Col lg={{ size: 4 }}>
+          <Col lg={{ size: 4 }} className="mt-4 mt-lg-0">
             <Card>
               <CardBody>
                 <CardTitle tag="h5">Upcoming Tasks</CardTitle>
@@ -36,6 +36,13 @@ class Home extends React.Component {
                 </List>
               </CardBody>
             </Card>
+          </Col>
+          <Col sm={12} className="text-center mt-3 d-grid d-sm-inline">
+            <Link to="/tasks" className="my-link">
+              <Button color="outline-primary" size="md">
+                See All
+              </Button>
+            </Link>
           </Col>
         </Row>
       </Fragment>

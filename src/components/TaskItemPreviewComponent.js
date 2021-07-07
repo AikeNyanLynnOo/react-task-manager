@@ -28,7 +28,7 @@ function TaskItemPreview({ task }) {
     setProject(!project);
   };
   return (
-    <div className="mt-4 my-bg-light">
+    <div className="mt-2 my-bg-light">
       <ToastGenerator
         toastOpen={toastOpen}
         toggleToast={toggleToast}
@@ -85,7 +85,7 @@ function TaskItemPreview({ task }) {
             toggleTooltip={toggleProject}
           ></BadgeToolTip>
         )}
-        <div className="my-3">
+        <div className="mt-3 mb-2">
           <span>
             <i className="fa fa-calendar"></i> {task.dueDate}{" "}
           </span>

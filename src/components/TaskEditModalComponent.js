@@ -10,52 +10,130 @@ import {
   Col,
   Input,
   Button,
+  FormFeedback,
 } from "reactstrap";
 import { renderComments } from "./TaskDetailComponent";
 class TaskEditModal extends React.Component {
   constructor(props) {
     super(props);
-    this.state =
-      (props.task && {
-        progress: props.task.progress,
-      }) ||
-      {};
-    this.handleChange = this.handleChange.bind(this);
+    this.state = {
+      title: (props.task && props.task.title) || null,
+      project: (props.task && props.task.project) || null,
+      label: (props.task && props.task.label) || null,
+      priority: (props.task && props.task.priority) || null,
+      dueDate: (props.task && props.task.dueDate) || null,
+      dueTime: (props.task && props.task.dueTime) || "",
+      remindMe: (props.task && props.task.remindMe) || null,
+      progress: (props.task && props.task.progress) || null,
+      comments: (props.task && props.task.comments) || null,
+      comment: "",
+      blur: {
+        title: false,
+        dueDate: false,
+      },
+    };
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
   }
-  handleChange(event) {
+  handleInputChange(event) {
+    const value =
+      event.target.type === "checkbox"
+        ? event.target.checked
+        : event.target.value;
+    const name = event.target.name;
+
     this.setState({
-      [event.target.name]: event.target.value,
+      [name]: value,
     });
+    console.log(this.state);
   }
-  render() {
-    const { isOpen, toggle, task } = this.props;
+
+  handleBlur = (field) => (event) => {
+    this.setState({
+      blur: {
+        ...this.state.blur,
+        [field]: true,
+      },
+    });
+  };
+  handleSubmit(event) {
+    event.preventDefault();
+    alert(JSON.stringify(this.state));
+  }
+  validate(title) {
+    const errors = {
+      title: "",
+      dueDate: "",
+      btn: false,
+    };
+    if (title) {
+      if (this.state.blur.title && title.length < 3) {
+        errors.title = "Too short! Title should contain at least 3 letters";
+      }
+      if (this.state.blur.title && title.length > 80) {
+        errors.title = "Too long! Give a short and descriptive title";
+      }
+      if (errors.title) {
+        errors.btn = true;
+      }
+      return errors;
+    } else {
+      if (!this.state.title || !this.state.dueDate) {
+        return true;
+      }
+    }
+  }
+  renderRadios = () => {
     return (
-      <Modal isOpen={isOpen} toggle={toggle} className="modal-lg">
-        <ModalHeader toggle={toggle}>Add New Task</ModalHeader>
+      <div>
+        {[1, 2, 3, 4, 5].map((no) => {
+          return (
+            <Fragment key={no}>
+              <Label for={`p${no}`}>{no}</Label>
+              <Input
+                type="radio"
+                name="priority"
+                id={`p${no}`}
+                className="ms-1 me-3"
+                value={no}
+                defaultChecked={this.state.priority === no}
+                onChange={this.handleInputChange}
+              />
+            </Fragment>
+          );
+        })}
+      </div>
+    );
+  };
+  render() {
+    const errors = this.validate(this.state.title, this.state.dueDate);
+    console.log("Errors are " + errors.title);
+    return (
+      <Modal
+        isOpen={this.props.isOpen}
+        toggle={this.props.toggle}
+        className="modal-lg"
+      >
+        <ModalHeader toggle={this.props.toggle}>Add New Task</ModalHeader>
         <ModalBody>
-          {/* task title
-              task description
-              project
-              label
-              priority
-              comment
-              due date 
-              progress
-              remindMe
-              */}
-          <Form>
+          <Form id="my-form" onSubmit={this.handleSubmit}>
             <FormGroup row className="mt-3">
               <Label for="title" sm={2}>
-                Title
+                Title (Req.)
               </Label>
               <Col sm={10}>
                 <Input
                   type="text"
                   name="title"
-                  id="title"
                   placeholder="Task Title"
-                  value={task && task.title}
+                  value={this.state.title}
+                  valid={errors.title === ""}
+                  invalid={errors.title !== ""}
+                  onChange={this.handleInputChange}
+                  onBlur={this.handleBlur("title")}
                 />
+                <FormFeedback>{errors.title}</FormFeedback>
               </Col>
             </FormGroup>
             <FormGroup row className="mt-3">
@@ -68,14 +146,12 @@ class TaskEditModal extends React.Component {
                   name="project"
                   id="project"
                   className="form-select"
+                  value={this.state.project}
+                  onChange={this.handleInputChange}
                 >
                   {["Project 1", "Project 2", "Project 3"].map((pj, index) => {
                     return (
-                      <option
-                        value={pj}
-                        selected={task && pj === task.project}
-                        key={index}
-                      >
+                      <option value={pj} key={index}>
                         {pj}
                       </option>
                     );
@@ -93,14 +169,12 @@ class TaskEditModal extends React.Component {
                   name="label"
                   id="label"
                   className="form-select"
+                  value={this.state.label}
+                  onChange={this.handleInputChange}
                 >
                   {["label 1", "label 2", "label 3"].map((lb, index) => {
                     return (
-                      <option
-                        value={lb}
-                        selected={task && lb === task.label}
-                        key={index}
-                      >
+                      <option value={lb} key={index}>
                         {lb}
                       </option>
                     );
@@ -112,69 +186,29 @@ class TaskEditModal extends React.Component {
               <Col sm={2}>
                 <Label>Priority</Label>
               </Col>
-              <Col>
-                <div>
-                  <Label for="p1">1</Label>
-                  <Input
-                    type="radio"
-                    name="priority"
-                    id="p1"
-                    className="ms-1 me-3"
-                    checked={task && task.priority === 1}
-                  />
-                  <Label for="p2">2</Label>
-                  <Input
-                    type="radio"
-                    name="priority"
-                    id="p2"
-                    className="ms-1 me-3"
-                    checked={task && task.priority === 2}
-                  />
-                  <Label for="p3">3</Label>
-                  <Input
-                    type="radio"
-                    name="priority"
-                    id="p3"
-                    className="ms-1 me-3"
-                    checked={task && task.priority === 3}
-                  />
-                  <Label for="p4">4</Label>
-                  <Input
-                    type="radio"
-                    name="priority"
-                    id="p4"
-                    className="ms-1 me-3"
-                    checked={task && task.priority === 4}
-                  />
-                  <Label for="p5">5</Label>
-                  <Input
-                    type="radio"
-                    name="priority"
-                    id="p5"
-                    className="ms-1 me-3"
-                    checked={task && task.priority === 5}
-                  />
-                </div>
-              </Col>
+              <Col>{this.renderRadios()}</Col>
             </FormGroup>
             <FormGroup row className="mt-3">
               <Label for="dueDate" sm={2}>
-                Due
+                Due (Date Req.)
               </Label>
               <Col sm={3} className="mt-3 mt-sm-0">
                 <Input
                   type="date"
                   name="dueDate"
                   id="dueDate"
-                  value={task && task.dueDate}
+                  value={this.state.dueDate}
+                  onChange={this.handleInputChange}
                 />
+                <FormFeedback>{errors.dueDate}</FormFeedback>
               </Col>
               <Col sm={3} className="mt-3 mt-sm-0">
                 <Input
                   type="time"
                   name="dueTime"
                   id="dueTime"
-                  value={task && task.dueTime}
+                  value={this.state.dueTime}
+                  onChange={this.handleInputChange}
                 />
               </Col>
               <Col
@@ -188,13 +222,14 @@ class TaskEditModal extends React.Component {
                     name="remindMe"
                     id="remindMe"
                     className="ms-2"
-                    checked={task && task.remindMe}
+                    checked={this.state.remindMe}
+                    onChange={this.handleInputChange}
                   />
                 </Label>
               </Col>
             </FormGroup>
 
-            {task && (
+            {this.props.task && (
               <FormGroup row className="mt-3">
                 <Col sm="2">
                   <Label for="progress">Progress</Label>
@@ -205,8 +240,8 @@ class TaskEditModal extends React.Component {
                     className="form-range"
                     id="progress"
                     name="progress"
-                    onChange={this.handleChange}
-                    defaultValue={this.state.progress}
+                    value={this.state.progress}
+                    onChange={this.handleInputChange}
                   />
                 </Col>
                 <Col sm="2">
@@ -220,14 +255,21 @@ class TaskEditModal extends React.Component {
                 Comment
               </Label>
               <Col sm={10}>
-                <Input type="textarea" name="comment" id="comment" rows="6" />
+                <Input
+                  type="textarea"
+                  name="comment"
+                  id="comment"
+                  rows="6"
+                  value={this.state.comment}
+                  onChange={this.handleInputChange}
+                />
               </Col>
             </FormGroup>
-            {task && (
+            {this.props.task && (
               <Fragment>
                 <hr />
                 <h6>Previous Comments</h6>
-                {renderComments(task.comments, {
+                {renderComments(this.props.task.comments, {
                   edit: true,
                   deleteComment: (id) => {
                     alert(`Deleted comment with id ${id}`);
@@ -238,10 +280,16 @@ class TaskEditModal extends React.Component {
           </Form>
         </ModalBody>
         <ModalFooter>
-          <Button className="btn btn-danger" onClick={toggle}>
+          <Button className="btn btn-danger" onClick={this.props.toggle}>
             Cancel
           </Button>
-          <Button className="btn btn-primary" onClick={toggle}>
+          <Button
+            className="btn btn-primary"
+            type="submit"
+            form="my-form"
+            onClick={this.props.toggle}
+            disabled={errors.btn || this.validate()}
+          >
             Save
           </Button>
         </ModalFooter>

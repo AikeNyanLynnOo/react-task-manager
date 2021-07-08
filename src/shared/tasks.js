@@ -2,7 +2,7 @@ export const TASKS = [
   {
     id: 1,
     title: "My task",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: [
       "This task is important !",
       "Second comment",
@@ -20,7 +20,7 @@ export const TASKS = [
   {
     id: 2,
     title: "Title",
-    dueDate: "1/9/2021",
+    dueDate: "2021-09-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 50,
     priority: 3,
@@ -31,7 +31,7 @@ export const TASKS = [
   {
     id: 3,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 50,
     priority: 3,
@@ -42,7 +42,7 @@ export const TASKS = [
   {
     id: 4,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 50,
     priority: 3,
@@ -53,7 +53,7 @@ export const TASKS = [
   {
     id: 5,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,
@@ -64,7 +64,7 @@ export const TASKS = [
   {
     id: 6,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,
@@ -75,7 +75,7 @@ export const TASKS = [
   {
     id: 7,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,
@@ -86,7 +86,7 @@ export const TASKS = [
   {
     id: 8,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,
@@ -97,7 +97,7 @@ export const TASKS = [
   {
     id: 9,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,
@@ -108,7 +108,7 @@ export const TASKS = [
   {
     id: 10,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,
@@ -119,7 +119,7 @@ export const TASKS = [
   {
     id: 11,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,
@@ -130,7 +130,7 @@ export const TASKS = [
   {
     id: 12,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,
@@ -141,7 +141,7 @@ export const TASKS = [
   {
     id: 13,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,
@@ -152,7 +152,7 @@ export const TASKS = [
   {
     id: 14,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,
@@ -163,7 +163,7 @@ export const TASKS = [
   {
     id: 15,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,
@@ -174,7 +174,7 @@ export const TASKS = [
   {
     id: 16,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,
@@ -185,7 +185,7 @@ export const TASKS = [
   {
     id: 17,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,
@@ -196,7 +196,7 @@ export const TASKS = [
   {
     id: 18,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,
@@ -207,7 +207,7 @@ export const TASKS = [
   {
     id: 19,
     title: "Title",
-    dueDate: "1/2/2019",
+    dueDate: "2019-02-01",
     comments: ["This task is important !", "Second comment", "Third Comment"],
     progress: 0,
     priority: 3,

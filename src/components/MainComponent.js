@@ -6,6 +6,7 @@ import AllTasks from "./AllTasksComponent";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
+import { fetchTasks } from "../redux/actions/ActionCreators";
 const mapStateToProps = (state) => {
   return {
     tasks: state.tasks,
@@ -15,13 +16,21 @@ const mapStateToProps = (state) => {
   };
 };
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchTasks: () => dispatch(fetchTasks()),
+  };
+};
 class Main extends React.Component {
+  componentDidMount() {
+    this.props.fetchTasks();
+  }
   render() {
     const TaskWithId = ({ match, location, history }) => {
       const taskId = parseInt(match.params.taskId, 10);
       return (
         <TaskDetail
-          task={this.props.tasks.filter((task) => task.id === taskId)[0]}
+          task={this.props.tasks.tasks.filter((task) => task.id === taskId)[0]}
           history={history}
         ></TaskDetail>
       );
@@ -33,12 +42,24 @@ class Main extends React.Component {
           <Switch>
             <Route
               path="/home"
-              component={() => <Home tasks={this.props.tasks} />}
+              component={() => (
+                <Home
+                  tasks={this.props.tasks.tasks}
+                  isLoading={this.props.tasks.isLoading}
+                  errMsg={this.props.tasks.errMsg}
+                />
+              )}
             ></Route>
             <Route
               exact
               path="/tasks"
-              component={() => <AllTasks tasks={this.props.tasks} />}
+              component={() => (
+                <AllTasks
+                  tasks={this.props.tasks.tasks}
+                  isLoading={this.props.tasks.isLoading}
+                  errMsg={this.props.tasks.errMsg}
+                />
+              )}
             ></Route>
             <Route path="/tasks/:taskId" component={TaskWithId}></Route>
             <Redirect to="/home" />
@@ -49,4 +70,4 @@ class Main extends React.Component {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));

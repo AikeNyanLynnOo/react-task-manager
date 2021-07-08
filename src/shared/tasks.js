@@ -76,7 +76,7 @@ export const TASKS = [
     progress: 0,
     priority: 3,
     label: 3,
-    project:1,
+    project: 1,
     remindMe: true,
   },
   {

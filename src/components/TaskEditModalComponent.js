@@ -13,6 +13,16 @@ import {
   FormFeedback,
 } from "reactstrap";
 import { renderComments } from "./TaskDetailComponent";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => {
+  return {
+    comments: state.comments,
+    labels: state.labels,
+    projects: state.projects,
+  };
+};
+
 class TaskEditModal extends React.Component {
   constructor(props) {
     super(props);
@@ -107,8 +117,10 @@ class TaskEditModal extends React.Component {
     );
   };
   render() {
+    const comments =
+      this.props.task &&
+      this.props.comments.filter((cmt) => cmt.taskId === this.props.task.id);
     const errors = this.validate(this.state.title, this.state.dueDate);
-    console.log("Errors are " + errors.title);
     return (
       <Modal
         isOpen={this.props.isOpen}
@@ -149,10 +161,10 @@ class TaskEditModal extends React.Component {
                   value={this.state.project}
                   onChange={this.handleInputChange}
                 >
-                  {["Project 1", "Project 2", "Project 3"].map((pj, index) => {
+                  {this.props.projects.map((pj, index) => {
                     return (
-                      <option value={pj} key={index}>
-                        {pj}
+                      <option value={pj.id} key={index}>
+                        {pj.title}
                       </option>
                     );
                   })}
@@ -172,10 +184,10 @@ class TaskEditModal extends React.Component {
                   value={this.state.label}
                   onChange={this.handleInputChange}
                 >
-                  {["label 1", "label 2", "label 3"].map((lb, index) => {
+                  {this.props.labels.map((lb, index) => {
                     return (
-                      <option value={lb} key={index}>
-                        {lb}
+                      <option value={lb.id} key={index}>
+                        {lb.text}
                       </option>
                     );
                   })}
@@ -269,7 +281,7 @@ class TaskEditModal extends React.Component {
               <Fragment>
                 <hr />
                 <h6>Previous Comments</h6>
-                {renderComments(this.props.task.comments, {
+                {renderComments(comments, {
                   edit: true,
                   deleteComment: (id) => {
                     alert(`Deleted comment with id ${id}`);
@@ -298,4 +310,4 @@ class TaskEditModal extends React.Component {
   }
 }
 
-export default TaskEditModal;
+export default connect(mapStateToProps)(TaskEditModal);

@@ -9,19 +9,19 @@ import { connect } from "react-redux";
 const mapStateToProps = (state) => {
   return {
     tasks: state.tasks,
+    projects: state.projects,
+    labels: state.labels,
+    comments: state.comments,
   };
 };
 
 class Main extends React.Component {
   render() {
     const TaskWithId = ({ match, location, history }) => {
+      const taskId = parseInt(match.params.taskId, 10);
       return (
         <TaskDetail
-          task={
-            this.props.tasks.filter(
-              (task) => task.id === parseInt(match.params.taskId, 10)
-            )[0]
-          }
+          task={this.props.tasks.filter((task) => task.id === taskId)[0]}
           history={history}
         ></TaskDetail>
       );

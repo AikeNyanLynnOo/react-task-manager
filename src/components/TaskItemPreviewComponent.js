@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import BadgeToolTip from "./BadgeTooltipComponent";
 import ToastGenerator from "./ToastGeneratorComponent";
-function TaskItemPreview({ task }) {
+function TaskItemPreview({ task, taskLabel, taskProject, cmtCount }) {
   const [priority, setPriority] = useState(false);
   const [label, setLabel] = useState(false);
   const [project, setProject] = useState(false);
@@ -71,7 +71,7 @@ function TaskItemPreview({ task }) {
           <BadgeToolTip
             tooltip={label}
             target="label"
-            badge={task.label}
+            badge={taskLabel}
             badgeType="Label"
             toggleTooltip={toggleLabel}
           ></BadgeToolTip>
@@ -80,7 +80,7 @@ function TaskItemPreview({ task }) {
           <BadgeToolTip
             tooltip={project}
             target="project"
-            badge={task.project}
+            badge={taskProject}
             badgeType="Project"
             toggleTooltip={toggleProject}
           ></BadgeToolTip>
@@ -90,7 +90,7 @@ function TaskItemPreview({ task }) {
             <i className="fa fa-calendar"></i> {task.dueDate}{" "}
           </span>
           <span>
-            <i className="fa fa-comment"></i> {task.comments.length}
+            <i className="fa fa-comment"></i> {cmtCount}
           </span>
         </div>
       </div>

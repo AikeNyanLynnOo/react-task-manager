@@ -2,6 +2,15 @@ import React, { Fragment } from "react";
 import { Row, Col, Card, CardTitle, CardBody, List, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import TaskItemPreview from "./TaskItemPreviewComponent";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => {
+  return {
+    comments: state.comments,
+    projects: state.projects,
+    labels: state.labels,
+  };
+};
 class Home extends React.Component {
   render() {
     return (
@@ -16,7 +25,27 @@ class Home extends React.Component {
                   {this.props.tasks
                     .filter((task) => task.progress > 0)
                     .map((task) => {
-                      return <TaskItemPreview task={task} key={task.id} />;
+                      return (
+                        <TaskItemPreview
+                          key={task.id}
+                          task={task}
+                          taskLabel={
+                            this.props.labels.filter(
+                              (lb) => lb.id === task.label
+                            )[0].text
+                          }
+                          taskProject={
+                            this.props.projects.filter(
+                              (pj) => pj.id === task.project
+                            )[0].title
+                          }
+                          cmtCount={
+                            this.props.comments.filter(
+                              (cmt) => cmt.taskId === task.id
+                            ).length
+                          }
+                        />
+                      );
                     })}
                 </List>
               </CardBody>
@@ -31,7 +60,27 @@ class Home extends React.Component {
                   {this.props.tasks
                     .filter((task) => !task.progress > 0)
                     .map((task) => {
-                      return <TaskItemPreview task={task} key={task.id} />;
+                      return (
+                        <TaskItemPreview
+                          key={task.id}
+                          task={task}
+                          taskLabel={
+                            this.props.labels.filter(
+                              (lb) => lb.id === task.label
+                            )[0].text
+                          }
+                          taskProject={
+                            this.props.projects.filter(
+                              (pj) => pj.id === task.project
+                            )[0].title
+                          }
+                          cmtCount={
+                            this.props.comments.filter(
+                              (cmt) => cmt.taskId === task.id
+                            ).length
+                          }
+                        />
+                      );
                     })}
                 </List>
               </CardBody>
@@ -50,4 +99,4 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+export default connect(mapStateToProps)(Home);

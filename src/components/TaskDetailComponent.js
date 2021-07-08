@@ -15,19 +15,40 @@ import {
 import ToastGenerator from "./ToastGeneratorComponent";
 import TaskEditModal from "./TaskEditModalComponent";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => {
+  return {
+    comments: state.comments,
+    labels: state.labels,
+    projects: state.projects,
+  };
+};
+
 export const renderComments = (comments, payload) => {
   return (
     <List type="unstyled" className="my-comment-list">
       {comments.map((comment, index) => {
         return (
           <li key={index} className="d-block">
-            <p className="p-3 my-comment d-inline-block">{comment}</p>
-            {payload && payload.edit && (
-              <i
-                className="fa fa-trash ms-3 "
-                onClick={() => payload.deleteComment(comment.id)}
-              ></i>
-            )}
+            <Row>
+              <Col xs="10">
+                <p className="p-3 my-comment d-inline-block mb-0">
+                  {comment.text}
+                </p>
+              </Col>
+              <Col xs="2" className="align-self-center">
+                {payload && payload.edit && (
+                  <i
+                    className="fa fa-trash btn"
+                    onClick={() => payload.deleteComment(comment.id)}
+                  ></i>
+                )}
+              </Col>
+            </Row>
+            <code className="d-block mt-0 mb-4 ms-1">
+              {comment.date}, {comment.time}
+            </code>
           </li>
         );
       })}
@@ -56,6 +77,9 @@ class TaskDetail extends React.Component {
   }
 
   render() {
+    const comments = this.props.comments.filter(
+      (cmt) => cmt.taskId === this.props.task.id
+    );
     return (
       <Fragment>
         <ToastGenerator
@@ -98,16 +122,26 @@ class TaskDetail extends React.Component {
                 </CardTitle>
                 <CardSubtitle tag="h6" className="my-3">
                   <span className="badge bg-primary me-1">
-                    {this.props.task.priority}
+                    Priority-{this.props.task.priority}
                   </span>
                   {this.props.task.label && (
                     <span className="badge bg-primary me-1">
-                      {this.props.task.label}
+                      Label-
+                      {
+                        this.props.labels.filter(
+                          (lb) => lb.id === this.props.task.label
+                        )[0].text
+                      }
                     </span>
                   )}
                   {this.props.task.project && (
                     <span className="badge bg-primary me-1">
-                      {this.props.task.project}
+                      Priority-
+                      {
+                        this.props.projects.filter(
+                          (pj) => pj.id === this.props.task.project
+                        )[0].title
+                      }
                     </span>
                   )}
                 </CardSubtitle>
@@ -118,8 +152,7 @@ class TaskDetail extends React.Component {
                       {this.props.task.dueDate}{" "}
                     </span>
                     <span>
-                      <i className="fa fa-comment"></i>{" "}
-                      {this.props.task.comments.length}
+                      <i className="fa fa-comment"></i> {comments.length}
                     </span>
                   </Col>
                   <Col md={{ size: 5, offset: 2 }} className="text-sm-end">
@@ -131,7 +164,7 @@ class TaskDetail extends React.Component {
                 <hr />
                 <Row>
                   <h6>Comments</h6>
-                  {renderComments(this.props.task.comments)}
+                  {renderComments(comments)}
                 </Row>
               </CardBody>
             </Card>
@@ -142,4 +175,4 @@ class TaskDetail extends React.Component {
   }
 }
 
-export default TaskDetail;
+export default connect(mapStateToProps)(TaskDetail);

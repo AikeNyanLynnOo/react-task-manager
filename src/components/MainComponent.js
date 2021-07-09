@@ -6,24 +6,35 @@ import AllTasks from "./AllTasksComponent";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
-import { fetchTasks } from "../redux/actions/ActionCreators";
+import {
+  fetchTasks,
+  fetchComments,
+  fetchLabels,
+  fetchProjects,
+} from "../redux/actions/ActionCreators";
 const mapStateToProps = (state) => {
   return {
     tasks: state.tasks,
+    comments: state.comments,
     projects: state.projects,
     labels: state.labels,
-    comments: state.comments,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchTasks: () => dispatch(fetchTasks()),
+    fetchComments: () => dispatch(fetchComments()),
+    fetchLabels: () => dispatch(fetchLabels()),
+    fetchProjects: () => dispatch(fetchProjects()),
   };
 };
 class Main extends React.Component {
   componentDidMount() {
     this.props.fetchTasks();
+    this.props.fetchComments();
+    this.props.fetchProjects();
+    this.props.fetchLabels();
   }
   render() {
     const TaskWithId = ({ match, location, history }) => {
@@ -47,6 +58,9 @@ class Main extends React.Component {
                   tasks={this.props.tasks.tasks}
                   isLoading={this.props.tasks.isLoading}
                   errMsg={this.props.tasks.errMsg}
+                  comments={this.props.comments}
+                  projects={this.props.projects}
+                  labels={this.props.labels}
                 />
               )}
             ></Route>
@@ -58,6 +72,8 @@ class Main extends React.Component {
                   tasks={this.props.tasks.tasks}
                   isLoading={this.props.tasks.isLoading}
                   errMsg={this.props.tasks.errMsg}
+                  projects={this.props.projects}
+                  labels={this.props.labels}
                 />
               )}
             ></Route>

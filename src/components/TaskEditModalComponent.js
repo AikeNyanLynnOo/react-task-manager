@@ -119,7 +119,7 @@ class TaskEditModal extends React.Component {
   render() {
     const comments =
       this.props.task &&
-      this.props.comments.filter((cmt) => cmt.taskId === this.props.task.id);
+      this.props.comments.comments.filter((cmt) => cmt.taskId === this.props.task.id);
     const errors = this.validate(this.state.title, this.state.dueDate);
     return (
       <Modal
@@ -161,7 +161,7 @@ class TaskEditModal extends React.Component {
                   value={this.state.project}
                   onChange={this.handleInputChange}
                 >
-                  {this.props.projects.map((pj, index) => {
+                  {this.props.projects.projects.map((pj, index) => {
                     return (
                       <option value={pj.id} key={index}>
                         {pj.title}
@@ -184,7 +184,7 @@ class TaskEditModal extends React.Component {
                   value={this.state.label}
                   onChange={this.handleInputChange}
                 >
-                  {this.props.labels.map((lb, index) => {
+                  {this.props.labels.labels.map((lb, index) => {
                     return (
                       <option value={lb.id} key={index}>
                         {lb.text}

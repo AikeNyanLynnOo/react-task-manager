@@ -3,21 +3,14 @@ import { Row, Col, Card, CardTitle, CardBody, List, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import TaskItemPreview from "./TaskItemPreviewComponent";
 import Loading from "./LoadingComponent";
-import { connect } from "react-redux";
-
-const mapStateToProps = (state) => {
-  return {
-    comments: state.comments,
-    projects: state.projects,
-    labels: state.labels,
-  };
-};
+import Error from "./ErrorComponent";
 class Home extends React.Component {
   render() {
     return (
       <Fragment>
         {this.props.isLoading && <Loading />}
-        {!this.props.isLoading && (
+        {this.props.errMsg && <Error errMsg={this.props.errMsg} />}
+        {!this.props.isLoading && !this.props.errMsg && (
           <Row>
             <Col lg={{ size: 4, offset: 2 }}>
               <Card>
@@ -25,31 +18,37 @@ class Home extends React.Component {
                   <CardTitle tag="h5">Active Tasks</CardTitle>
                   <hr className="mb-0" />
                   <List type="unstyled" className="my-task-list">
-                    {this.props.tasks
-                      .filter((task) => task.progress > 0)
-                      .map((task) => {
-                        return (
-                          <TaskItemPreview
-                            key={task.id}
-                            task={task}
-                            taskLabel={
-                              this.props.labels.filter(
-                                (lb) => lb.id === task.label
-                              )[0].text
-                            }
-                            taskProject={
-                              this.props.projects.filter(
-                                (pj) => pj.id === task.project
-                              )[0].title
-                            }
-                            cmtCount={
-                              this.props.comments.filter(
-                                (cmt) => cmt.taskId === task.id
-                              ).length
-                            }
-                          />
-                        );
-                      })}
+                    {!this.props.comments.isLoading &&
+                      !this.props.comments.errMsg &&
+                      !this.props.labels.isLoading &&
+                      !this.props.labels.errMsg &&
+                      !this.props.projects.isLoading &&
+                      !this.props.projects.errMsg &&
+                      this.props.tasks
+                        .filter((task) => task.progress > 0)
+                        .map((task) => {
+                          return (
+                            <TaskItemPreview
+                              key={task.id}
+                              task={task}
+                              taskLabel={
+                                this.props.labels.labels.filter(
+                                  (lb) => lb.id === task.label
+                                )[0].text
+                              }
+                              taskProject={
+                                this.props.projects.projects.filter(
+                                  (pj) => pj.id === task.project
+                                )[0].title
+                              }
+                              cmtCount={
+                                this.props.comments.comments.filter(
+                                  (cmt) => cmt.taskId === task.id
+                                ).length
+                              }
+                            />
+                          );
+                        })}
                   </List>
                 </CardBody>
               </Card>
@@ -60,31 +59,37 @@ class Home extends React.Component {
                   <CardTitle tag="h5">Upcoming Tasks</CardTitle>
                   <hr className="mb-0" />
                   <List type="unstyled" className="my-task-list">
-                    {this.props.tasks
-                      .filter((task) => !task.progress > 0)
-                      .map((task) => {
-                        return (
-                          <TaskItemPreview
-                            key={task.id}
-                            task={task}
-                            taskLabel={
-                              this.props.labels.filter(
-                                (lb) => lb.id === task.label
-                              )[0].text
-                            }
-                            taskProject={
-                              this.props.projects.filter(
-                                (pj) => pj.id === task.project
-                              )[0].title
-                            }
-                            cmtCount={
-                              this.props.comments.filter(
-                                (cmt) => cmt.taskId === task.id
-                              ).length
-                            }
-                          />
-                        );
-                      })}
+                    {!this.props.comments.isLoading &&
+                      !this.props.comments.errMsg &&
+                      !this.props.labels.isLoading &&
+                      !this.props.labels.errMsg &&
+                      !this.props.projects.isLoading &&
+                      !this.props.projects.errMsg &&
+                      this.props.tasks
+                        .filter((task) => !task.progress > 0)
+                        .map((task) => {
+                          return (
+                            <TaskItemPreview
+                              key={task.id}
+                              task={task}
+                              taskLabel={
+                                this.props.labels.labels.filter(
+                                  (lb) => lb.id === task.label
+                                )[0].text
+                              }
+                              taskProject={
+                                this.props.projects.projects.filter(
+                                  (pj) => pj.id === task.project
+                                )[0].title
+                              }
+                              cmtCount={
+                                this.props.comments.comments.filter(
+                                  (cmt) => cmt.taskId === task.id
+                                ).length
+                              }
+                            />
+                          );
+                        })}
                   </List>
                 </CardBody>
               </Card>
@@ -103,4 +108,4 @@ class Home extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(Home);
+export default Home;

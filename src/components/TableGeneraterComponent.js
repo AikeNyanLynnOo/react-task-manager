@@ -6,6 +6,7 @@ import { Button, Progress } from "reactstrap";
 import ToastGenerator from "./ToastGeneratorComponent";
 import TaskEditModal from "./TaskEditModalComponent";
 import { Link } from "react-router-dom";
+
 const { SearchBar } = Search;
 
 class TableGenerater extends React.Component {

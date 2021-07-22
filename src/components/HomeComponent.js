@@ -4,8 +4,13 @@ import { Link } from "react-router-dom";
 import TaskItemPreview from "./TaskItemPreviewComponent";
 import Loading from "./LoadingComponent";
 import Error from "./ErrorComponent";
+import { Redirect } from "react-router-dom";
 class Home extends React.Component {
+  
   render() {
+    if (!this.props.auth.isLoggedIn) {
+      return <Redirect to="/login" />;
+    }
     return (
       <Fragment>
         {this.props.isLoading && <Loading />}
@@ -24,6 +29,8 @@ class Home extends React.Component {
                       !this.props.labels.errMsg &&
                       !this.props.projects.isLoading &&
                       !this.props.projects.errMsg &&
+                      !this.props.isLoading &&
+                      !this.props.errMsg &&
                       this.props.tasks
                         .filter((task) => task.progress > 0)
                         .map((task) => {
@@ -31,16 +38,8 @@ class Home extends React.Component {
                             <TaskItemPreview
                               key={task.id}
                               task={task}
-                              taskLabel={
-                                this.props.labels.labels.filter(
-                                  (lb) => lb.id === task.label
-                                )[0].text
-                              }
-                              taskProject={
-                                this.props.projects.projects.filter(
-                                  (pj) => pj.id === task.project
-                                )[0].title
-                              }
+                              taskLabel={task.label}
+                              taskProject={task.project}
                               cmtCount={
                                 this.props.comments.comments.filter(
                                   (cmt) => cmt.taskId === task.id
@@ -65,6 +64,8 @@ class Home extends React.Component {
                       !this.props.labels.errMsg &&
                       !this.props.projects.isLoading &&
                       !this.props.projects.errMsg &&
+                      !this.props.isLoading &&
+                      !this.props.errMsg &&
                       this.props.tasks
                         .filter((task) => !task.progress > 0)
                         .map((task) => {
@@ -72,16 +73,8 @@ class Home extends React.Component {
                             <TaskItemPreview
                               key={task.id}
                               task={task}
-                              taskLabel={
-                                this.props.labels.labels.filter(
-                                  (lb) => lb.id === task.label
-                                )[0].text
-                              }
-                              taskProject={
-                                this.props.projects.projects.filter(
-                                  (pj) => pj.id === task.project
-                                )[0].title
-                              }
+                              taskLabel={task.label}
+                              taskProject={task.project}
                               cmtCount={
                                 this.props.comments.comments.filter(
                                   (cmt) => cmt.taskId === task.id

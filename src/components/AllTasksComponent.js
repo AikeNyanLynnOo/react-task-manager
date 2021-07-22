@@ -4,15 +4,6 @@ import TaskEditModal from "./TaskEditModalComponent";
 import TableGenerater from "./TableGeneraterComponent";
 import Loading from "./LoadingComponent";
 import Error from "./ErrorComponent";
-import { connect } from "react-redux";
-
-const mapStateToProps = (state) => {
-  return {
-    projects: state.projects,
-    labels: state.labels,
-  };
-};
-
 class AllTasks extends React.Component {
   constructor(props) {
     super(props);
@@ -20,26 +11,25 @@ class AllTasks extends React.Component {
       isOpen: false,
     };
     this.toggle = this.toggle.bind(this);
-    this.mutateTasks = this.mutateTasks.bind(this);
+    // this.mutateTasks = this.mutateTasks.bind(this);
     this.checkOk = this.checkOk.bind(this);
   }
-
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen,
     });
   }
 
-  mutateTasks(tasks, projects, labels) {
-    return tasks.map((task) => {
-      var newTask = task;
-      newTask.project = projects.projects.filter(
-        (p) => p.id === task.project
-      )[0].title;
-      newTask.label = labels.labels.filter((l) => l.id === task.label)[0].text;
-      return newTask;
-    });
-  }
+  // mutateTasks(tasks, projects, labels) {
+  //   return tasks.map((task) => {
+  //     var newTask = task;
+  //     newTask.project = projects.projects.filter(
+  //       (p) => p.id === task.project
+  //     )[0].title;
+  //     newTask.label = labels.labels.filter((l) => l.id === task.label)[0].text;
+  //     return newTask;
+  //   });
+  // }
   checkOk() {
     if (
       !this.props.isLoading &&
@@ -55,6 +45,11 @@ class AllTasks extends React.Component {
     }
   }
   render() {
+    // const tasks = this.mutateTasks(
+    //   this.props.tasks,
+    //   this.props.projects,
+    //   this.props.labels
+    // );
     return (
       <div className="row">
         {this.props.isLoading && <Loading />}
@@ -67,13 +62,7 @@ class AllTasks extends React.Component {
             <TaskEditModal isOpen={this.state.isOpen} toggle={this.toggle} />
             <hr />
             <h3>All Tasks</h3>
-            <TableGenerater
-              tasks={this.mutateTasks(
-                this.props.tasks,
-                this.props.projects,
-                this.props.labels
-              )}
-            />
+            <TableGenerater tasks={this.props.tasks} />
           </div>
         )}
       </div>
@@ -81,4 +70,4 @@ class AllTasks extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(AllTasks);
+export default AllTasks;

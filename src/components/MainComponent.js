@@ -3,6 +3,8 @@ import Home from "./HomeComponent";
 import MenuBar from "./MenuBarComponent";
 import TaskDetail from "./TaskDetailComponent";
 import AllTasks from "./AllTasksComponent";
+import Login from "./auth/Login";
+import Register from "./auth/Register";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
@@ -11,13 +13,18 @@ import {
   fetchComments,
   fetchLabels,
   fetchProjects,
+  loginUser,
+  loginWithToken,
 } from "../redux/actions/ActionCreators";
+
+
 const mapStateToProps = (state) => {
   return {
     tasks: state.tasks,
     comments: state.comments,
     projects: state.projects,
     labels: state.labels,
+    auth: state.auth,
   };
 };
 
@@ -27,14 +34,16 @@ const mapDispatchToProps = (dispatch) => {
     fetchComments: () => dispatch(fetchComments()),
     fetchLabels: () => dispatch(fetchLabels()),
     fetchProjects: () => dispatch(fetchProjects()),
+    loginUser: (user) => dispatch(loginUser(user)),
+    loginWithToken: (token) => dispatch(loginWithToken(token)),
   };
 };
 class Main extends React.Component {
   componentDidMount() {
-    this.props.fetchTasks();
-    this.props.fetchComments();
-    this.props.fetchProjects();
-    this.props.fetchLabels();
+    var token = localStorage.getItem("token");
+    if (token) {
+      this.props.loginWithToken(token);
+    }
   }
   render() {
     const TaskWithId = ({ match, location, history }) => {
@@ -48,7 +57,7 @@ class Main extends React.Component {
     };
     return (
       <div>
-        <MenuBar></MenuBar>
+        <MenuBar auth={this.props.auth}></MenuBar>
         <div className="container my-5 pt-5">
           <Switch>
             <Route
@@ -61,6 +70,8 @@ class Main extends React.Component {
                   comments={this.props.comments}
                   projects={this.props.projects}
                   labels={this.props.labels}
+                  auth={this.props.auth}
+                  loginWithToken={this.props.loginWithToken}
                 />
               )}
             ></Route>
@@ -78,6 +89,17 @@ class Main extends React.Component {
               )}
             ></Route>
             <Route path="/tasks/:taskId" component={TaskWithId}></Route>
+            <Route
+              exact
+              path="/login"
+              component={() => (
+                <Login
+                  auth={this.props.auth}
+                  loginUser={this.props.loginUser}
+                />
+              )}
+            ></Route>
+            <Route exact path="/register" component={Register}></Route>
             <Redirect to="/home" />
           </Switch>
         </div>

@@ -54,7 +54,6 @@ export const renderComments = (comments, payload) => {
   );
 };
 class TaskDetail extends React.Component {
-  
   constructor(props) {
     super(props);
     this.state = {
@@ -106,7 +105,13 @@ class TaskDetail extends React.Component {
                     <Link to="/home">Home</Link>
                   )}
                   {this.state.prev && this.state.prev === "/tasks" && (
-                    <Link to="/tasks">Tasks</Link>
+                    <Link
+                      to={{
+                        pathname: `/tasks`,
+                      }}
+                    >
+                      Tasks
+                    </Link>
                   )}
                 </BreadcrumbItem>
                 <BreadcrumbItem active>{task.title}</BreadcrumbItem>

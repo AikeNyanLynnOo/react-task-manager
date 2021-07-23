@@ -2,7 +2,7 @@ import * as ActionTypes from "./ActionTypes";
 import axios from "axios";
 import { BASE_URL } from "../../shared/baseUrl";
 
-import CryptoJS from "crypto-js";
+import CryptoJS, { AES } from "crypto-js";
 // Fetchs
 export const fetchTasks = (userId) => (dispatch) => {
   dispatch(tasksLoading());
@@ -172,24 +172,74 @@ export const projectsFailed = (errMsg) => {
 
 // Auth
 
-export const loginUser = (user) => (dispatch) => {
-  dispatch(loginLoading());
-  setTimeout(() => {
-    dispatch(fetchComments());
-    dispatch(fetchTasks(1));
-    dispatch(loginSuccess(user));
-  }, 2000);
+export const registerUser = (user) => (dispatch) => {
+  return axios
+    .get(BASE_URL + "/users", {
+      params: {
+        email: user.email,
+      },
+    })
+    .then((res) => {
+      if (res.data.length < 1) {
+        return axios
+          .post(BASE_URL + "/users", {
+            email: user.email,
+            password: AES.encrypt(user.password, "123").toString(),
+          })
+          .then((res) => {
+            dispatch(registerSuccess());
+          })
+          .catch((err) => {
+            dispatch(registerFailed("Register Failed!"));
+          });
+      } else {
+        dispatch(registerFailed("Email has alrealy been used!"));
+      }
+    })
+    .catch((err) => {
+      dispatch(registerFailed("Register Failed!"));
+    });
 };
 
-export const loginWithToken = (token) => (dispatch) => {
-  var bytes = CryptoJS.AES.decrypt(token, "123");
-  var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+export const fetchUser = (user) => (dispatch) => {
+  return axios
+    .get(BASE_URL + "/users", {
+      params: {
+        email: user.email,
+      },
+    })
+    .then((res) => {
+      var bytes = CryptoJS.AES.decrypt(res.data[0].password, "123");
+      var pwd = bytes.toString(CryptoJS.enc.Utf8);
+      if (pwd === user.password) {
+        dispatch(fetchTasks(res.data[0].id));
+        dispatch(loginSuccess(user));
+      } else {
+        dispatch(loginFailed("Check your email or password"));
+      }
+    })
+    .catch((err) => {
+      dispatch(loginFailed(err.message));
+    });
+};
+
+export const loginUser = (user) => (dispatch) => {
   dispatch(loginLoading());
-  setTimeout(() => {
-    dispatch(fetchComments());
-    dispatch(fetchTasks(1));
-    dispatch(loginSuccess({}));
-  }, 2000);
+  dispatch(fetchComments());
+  dispatch(fetchUser(user));
+};
+
+export const logoutUser = () => (dispatch) => {
+  localStorage.removeItem("token");
+  dispatch(logoutSuccess());
+}
+
+export const loginWithToken = (token) => (dispatch) => {
+  var bytes = AES.decrypt(token, "123");
+  var data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  dispatch(loginLoading());
+  dispatch(fetchComments());
+  dispatch(fetchUser(data));
 };
 
 export const loginLoading = () => {
@@ -204,10 +254,35 @@ export const loginSuccess = (user) => {
     payload: user,
   };
 };
+export const logoutSuccess = () => {
+  return {
+    type: ActionTypes.LOGOUT_SUCCESS,
+  };
+};
 
 export const loginFailed = (errMsg) => {
   return {
     type: ActionTypes.LOGIN_FAILED,
+    payload: errMsg,
+  };
+};
+
+export const registerLoading = () => {
+  return {
+    type: ActionTypes.REGISTER_LOADING,
+  };
+};
+
+export const registerSuccess = (user) => {
+  return {
+    type: ActionTypes.REGISTER_SUCCESS,
+    payload: user,
+  };
+};
+
+export const registerFailed = (errMsg) => {
+  return {
+    type: ActionTypes.REGISTER_FAILED,
     payload: errMsg,
   };
 };

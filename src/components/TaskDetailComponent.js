@@ -16,6 +16,8 @@ import ToastGenerator from "./ToastGeneratorComponent";
 import TaskEditModal from "./TaskEditModalComponent";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
+
 const mapStateToProps = (state) => {
   return {
     comments: state.comments,
@@ -57,7 +59,9 @@ class TaskDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      prev: this.props.history.location.state.prev,
+      prev:
+        this.props.history.location.state &&
+        this.props.history.location.state.prev,
       toastOpen: false,
       isOpen: false,
     };
@@ -84,7 +88,10 @@ class TaskDetail extends React.Component {
     const project =
       task &&
       this.props.projects.projects.filter((lb) => lb.id === task.project)[0];
-    if (task) {
+
+    if (!this.props.auth.isLoggedIn) {
+      return <Redirect to="/login" />;
+    } else if (task) {
       return (
         <Fragment>
           <ToastGenerator
@@ -98,25 +105,28 @@ class TaskDetail extends React.Component {
             task={task}
           />
           <Row>
-            <Col lg={8} className="mx-auto">
-              <Breadcrumb className="my-breadcrumb">
-                <BreadcrumbItem>
-                  {this.state.prev && this.state.prev === "/home" && (
-                    <Link to="/home">Home</Link>
-                  )}
-                  {this.state.prev && this.state.prev === "/tasks" && (
-                    <Link
-                      to={{
-                        pathname: `/tasks`,
-                      }}
-                    >
-                      Tasks
-                    </Link>
-                  )}
-                </BreadcrumbItem>
-                <BreadcrumbItem active>{task.title}</BreadcrumbItem>
-              </Breadcrumb>
-            </Col>
+            {this.state.prev && (
+              <Col lg={8} className="mx-auto">
+                <Breadcrumb className="my-breadcrumb">
+                  <BreadcrumbItem>
+                    {this.state.prev && this.state.prev === "/home" && (
+                      <Link to="/home">Home</Link>
+                    )}
+                    {this.state.prev && this.state.prev === "/tasks" && (
+                      <Link
+                        to={{
+                          pathname: `/tasks`,
+                        }}
+                      >
+                        Tasks
+                      </Link>
+                    )}
+                  </BreadcrumbItem>
+                  <BreadcrumbItem active>{task.title}</BreadcrumbItem>
+                </Breadcrumb>
+              </Col>
+            )}
+
             <Col lg={8} className="mx-auto">
               <Card>
                 <CardBody>

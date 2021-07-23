@@ -1,11 +1,11 @@
 import React, { Fragment } from "react";
-import { Form, Button, Input } from "reactstrap";
+import { Form, Button, Input, Row, Col } from "reactstrap";
 import { Redirect } from "react-router-dom";
 
 import Loading from "../LoadingComponent";
-import Error from "../ErrorComponent";
+import Message from "../MessageComponent";
 
-import {AES} from "crypto-js";
+import { AES } from "crypto-js";
 
 class Login extends React.Component {
   constructor(props) {
@@ -25,8 +25,8 @@ class Login extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     // login logic
-    const cipertxt = AES.encrypt(JSON.stringify(this.state), '123').toString()
-    localStorage.setItem("token",cipertxt);
+    const cipertxt = AES.encrypt(JSON.stringify(this.state), "123").toString();
+    localStorage.setItem("token", cipertxt);
     this.props.loginUser(this.state);
   }
   render() {
@@ -35,26 +35,36 @@ class Login extends React.Component {
       <Fragment>
         {this.props.auth.isLoading && <Loading />}
         {this.props.auth.isLoggedIn && <Redirect to="/home" />}
-        {this.props.auth.errMsg && <Error errMsg={this.props.auth.errMsg} />}
+        {this.props.auth.errMsg && (
+          <Message msg={this.props.auth.errMsg} type="error" />
+        )}
         {!this.props.auth.isLoading && !this.props.auth.isLoggedIn && (
-          <Form onSubmit={this.handleSubmit}>
-            <Input
-              type="text"
-              name="email"
-              id="email"
-              placeholder="Email"
-              value={email}
-              onChange={this.handleChange}
-            />
-            <Input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="Password"
-              value={password}
-              onChange={this.handleChange}
-            />
-            <Button type="submit" color="primary" size="sm">
+          <Form onSubmit={this.handleSubmit} className="text-center">
+            <Row>
+              <Col xs="12" md="4" className="mx-auto my-2">
+                <Input
+                  type="text"
+                  name="email"
+                  id="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={this.handleChange}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs="12" md="4" className="mx-auto my-2">
+                <Input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={this.handleChange}
+                />
+              </Col>
+            </Row>
+            <Button type="submit" color="primary" size="md">
               Login
             </Button>
           </Form>

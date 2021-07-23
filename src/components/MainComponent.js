@@ -5,6 +5,8 @@ import TaskDetail from "./TaskDetailComponent";
 import AllTasks from "./AllTasksComponent";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
+import Profile from "./auth/Profile";
+import Logout from "./auth/Logout";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
@@ -15,8 +17,9 @@ import {
   fetchProjects,
   loginUser,
   loginWithToken,
+  logoutUser,
+  registerUser,
 } from "../redux/actions/ActionCreators";
-
 
 const mapStateToProps = (state) => {
   return {
@@ -36,6 +39,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchProjects: () => dispatch(fetchProjects()),
     loginUser: (user) => dispatch(loginUser(user)),
     loginWithToken: (token) => dispatch(loginWithToken(token)),
+    registerUser: (user) => dispatch(registerUser(user)),
+    logoutUser: () => dispatch(logoutUser()),
   };
 };
 class Main extends React.Component {
@@ -52,6 +57,7 @@ class Main extends React.Component {
         <TaskDetail
           task={this.props.tasks.tasks.filter((task) => task.id === taskId)[0]}
           history={history}
+          auth={this.props.auth}
         ></TaskDetail>
       );
     };
@@ -71,7 +77,6 @@ class Main extends React.Component {
                   projects={this.props.projects}
                   labels={this.props.labels}
                   auth={this.props.auth}
-                  loginWithToken={this.props.loginWithToken}
                 />
               )}
             ></Route>
@@ -85,6 +90,7 @@ class Main extends React.Component {
                   errMsg={this.props.tasks.errMsg}
                   projects={this.props.projects}
                   labels={this.props.labels}
+                  auth={this.props.auth}
                 />
               )}
             ></Route>
@@ -99,7 +105,28 @@ class Main extends React.Component {
                 />
               )}
             ></Route>
-            <Route exact path="/register" component={Register}></Route>
+            <Route
+              exact
+              path="/register"
+              component={() => (
+                <Register
+                  registerUser={this.props.registerUser}
+                  auth={this.props.auth}
+                />
+              )}
+            ></Route>
+            <Route
+              exact
+              path="/profile"
+              component={() => <Profile user={this.props.auth.user} />}
+            ></Route>
+
+            <Route
+              exact
+              path="/logout"
+              component={() => <Logout logoutUser={this.props.logoutUser} />}
+            ></Route>
+
             <Redirect to="/home" />
           </Switch>
         </div>

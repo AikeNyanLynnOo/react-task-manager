@@ -18,12 +18,7 @@ class MenuBar extends React.Component {
     this.state = {
       isOpen: false,
     };
-    this.handleLogout = this.handleLogout.bind(this);
     this.toggle = this.toggle.bind(this);
-  }
-  handleLogout() {
-    localStorage.removeItem("token");
-    this.props.history.go("/");
   }
   toggle() {
     this.setState({ isOpen: !this.state.isOpen });
@@ -58,9 +53,14 @@ class MenuBar extends React.Component {
               </DropdownToggle>
               <DropdownMenu className="my-dropitems" right>
                 {!this.props.auth.isLoggedIn && (
-                  <DropdownItem>
-                    <Link to="/login">Login</Link>
-                  </DropdownItem>
+                  <React.Fragment>
+                    <DropdownItem>
+                      <Link to="/login">Login</Link>
+                    </DropdownItem>
+                    <DropdownItem>
+                      <Link to="/register">Register</Link>
+                    </DropdownItem>
+                  </React.Fragment>
                 )}
                 {this.props.auth.isLoggedIn && (
                   <React.Fragment>
@@ -68,7 +68,9 @@ class MenuBar extends React.Component {
                       <Link to="/profile">Profile</Link>
                     </DropdownItem>
                     <DropdownItem divider />
-                    <DropdownItem onClick={this.handleLogout}>Logout</DropdownItem>
+                    <DropdownItem>
+                      <Link to="/logout">Logout</Link>
+                    </DropdownItem>
                   </React.Fragment>
                 )}
               </DropdownMenu>

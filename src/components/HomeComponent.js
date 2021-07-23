@@ -3,10 +3,9 @@ import { Row, Col, Card, CardTitle, CardBody, List, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import TaskItemPreview from "./TaskItemPreviewComponent";
 import Loading from "./LoadingComponent";
-import Error from "./ErrorComponent";
+import Message from "./MessageComponent";
 import { Redirect } from "react-router-dom";
 class Home extends React.Component {
-  
   render() {
     if (!this.props.auth.isLoggedIn) {
       return <Redirect to="/login" />;
@@ -14,7 +13,7 @@ class Home extends React.Component {
     return (
       <Fragment>
         {this.props.isLoading && <Loading />}
-        {this.props.errMsg && <Error errMsg={this.props.errMsg} />}
+        {this.props.errMsg && <Message msg={this.props.errMsg} type="error" />}
         {!this.props.isLoading && !this.props.errMsg && (
           <Row>
             <Col lg={{ size: 4, offset: 2 }}>

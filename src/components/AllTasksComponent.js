@@ -3,7 +3,8 @@ import { Button } from "reactstrap";
 import TaskEditModal from "./TaskEditModalComponent";
 import TableGenerater from "./TableGeneraterComponent";
 import Loading from "./LoadingComponent";
-import Error from "./ErrorComponent";
+import Message from "./MessageComponent";
+import { Redirect } from "react-router-dom";
 class AllTasks extends React.Component {
   constructor(props) {
     super(props);
@@ -11,7 +12,6 @@ class AllTasks extends React.Component {
       isOpen: false,
     };
     this.toggle = this.toggle.bind(this);
-    // this.mutateTasks = this.mutateTasks.bind(this);
     this.checkOk = this.checkOk.bind(this);
   }
   toggle() {
@@ -20,16 +20,6 @@ class AllTasks extends React.Component {
     });
   }
 
-  // mutateTasks(tasks, projects, labels) {
-  //   return tasks.map((task) => {
-  //     var newTask = task;
-  //     newTask.project = projects.projects.filter(
-  //       (p) => p.id === task.project
-  //     )[0].title;
-  //     newTask.label = labels.labels.filter((l) => l.id === task.label)[0].text;
-  //     return newTask;
-  //   });
-  // }
   checkOk() {
     if (
       !this.props.isLoading &&
@@ -45,15 +35,13 @@ class AllTasks extends React.Component {
     }
   }
   render() {
-    // const tasks = this.mutateTasks(
-    //   this.props.tasks,
-    //   this.props.projects,
-    //   this.props.labels
-    // );
+    if (!this.props.auth.isLoggedIn) {
+      return <Redirect to="/login" />;
+    }
     return (
       <div className="row">
         {this.props.isLoading && <Loading />}
-        {this.props.errMsg && <Error errMsg={this.props.errMsg} />}
+        {this.props.errMsg && <Message msg={this.props.errMsg} type="error" />}
         {this.checkOk() && (
           <div className="col-12">
             <Button className="btn btn-success" onClick={this.toggle}>

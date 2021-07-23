@@ -47,7 +47,12 @@ class AllTasks extends React.Component {
             <Button className="btn btn-success" onClick={this.toggle}>
               <i className="fa fa-plus"></i>Add Tasks
             </Button>
-            <TaskEditModal isOpen={this.state.isOpen} toggle={this.toggle} />
+            <TaskEditModal
+              isOpen={this.state.isOpen}
+              toggle={this.toggle}
+              postTask={this.props.postTask}
+              auth={this.props.auth}
+            />
             <hr />
             <h3>All Tasks</h3>
             <TableGenerater tasks={this.props.tasks} />

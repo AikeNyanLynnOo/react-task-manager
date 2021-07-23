@@ -19,6 +19,7 @@ import {
   loginWithToken,
   logoutUser,
   registerUser,
+  postTask,
 } from "../redux/actions/ActionCreators";
 
 const mapStateToProps = (state) => {
@@ -41,6 +42,7 @@ const mapDispatchToProps = (dispatch) => {
     loginWithToken: (token) => dispatch(loginWithToken(token)),
     registerUser: (user) => dispatch(registerUser(user)),
     logoutUser: () => dispatch(logoutUser()),
+    postTask: (task, userId) => dispatch(postTask(task, userId)),
   };
 };
 class Main extends React.Component {
@@ -91,6 +93,7 @@ class Main extends React.Component {
                   projects={this.props.projects}
                   labels={this.props.labels}
                   auth={this.props.auth}
+                  postTask={this.props.postTask}
                 />
               )}
             ></Route>

@@ -1,6 +1,8 @@
 export const TASKS_LOADING = "TASKS_LOADING";
 export const ADD_TASKS = "ADD_TASKS";
 export const TASKS_FAILED = "TASKS_FAILED";
+export const POST_TASK_SUCCESS = "POST_TAS_SUCCESS";
+export const POST_TASK_FAILED = "POST_TASK_FAILED";
 
 export const COMMENTS_LOADING = "COMMENTS_LOADING";
 export const ADD_COMMENTS = "ADD_COMMENTS";

@@ -26,15 +26,17 @@ const mapStateToProps = (state) => {
 class TaskEditModal extends React.Component {
   constructor(props) {
     super(props);
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
     this.state = {
       title: (props.task && props.task.title) || null,
-      project: (props.task && props.task.project) || null,
-      label: (props.task && props.task.label) || null,
-      priority: (props.task && props.task.priority) || null,
-      dueDate: (props.task && props.task.dueDate) || null,
+      project: (props.task && props.task.project) || 0,
+      label: (props.task && props.task.label) || 0,
+      priority: (props.task && props.task.priority) || 1,
+      dueDate: (props.task && props.task.dueDate) || tomorrow,
       dueTime: (props.task && props.task.dueTime) || "",
-      remindMe: (props.task && props.task.remindMe) || null,
-      progress: (props.task && props.task.progress) || null,
+      remindMe: (props.task && props.task.remindMe) || false,
+      progress: (props.task && props.task.progress) || 0,
       comments: (props.task && props.task.comments) || null,
       comment: "",
       blur: {
@@ -69,7 +71,7 @@ class TaskEditModal extends React.Component {
   };
   handleSubmit(event) {
     event.preventDefault();
-    alert(JSON.stringify(this.state));
+    this.props.postTask(this.state, this.props.auth.user.id);
   }
   validate(title) {
     const errors = {
@@ -119,7 +121,9 @@ class TaskEditModal extends React.Component {
   render() {
     const comments =
       this.props.task &&
-      this.props.comments.comments.filter((cmt) => cmt.taskId === this.props.task.id);
+      this.props.comments.comments.filter(
+        (cmt) => cmt.taskId === this.props.task.id
+      );
     const errors = this.validate(this.state.title, this.state.dueDate);
     return (
       <Modal

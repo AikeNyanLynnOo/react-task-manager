@@ -44,6 +44,9 @@ export const mutateTasks = (tasks, projects, labels) => {
     var newTask = task;
     newTask.project = projects.filter((p) => p.id === task.project)[0].title;
     newTask.label = labels.filter((l) => l.id === task.label)[0].text;
+    newTask.dueDate = new Intl.DateTimeFormat(['ban', 'id']).format(
+      new Date(task.dueDate)
+    );
     return newTask;
   });
 };
@@ -84,6 +87,44 @@ export const fetchProjects = () => (dispatch) => {
 // actions
 
 // tasks
+
+export const postTask = (task, userId) => (dispatch) => {
+  return axios
+    .post(BASE_URL + "/tasks", {
+      userId: userId,
+      title: task.title,
+      dueDate: task.dueDate,
+      dueTime: task.dueTime,
+      progress: 0,
+      priority: +task.priority,
+      label: +task.label,
+      project: +task.project,
+      remindMe: task.remindMe,
+    })
+    .then((res) => {
+      if (res.status === 200) {
+        dispatch(fetchComments());
+        dispatch(fetchTasks(userId));
+        dispatch(postTaskSuccess(res.data[0]));
+      }
+    })
+    .catch((err) => {
+      dispatch(postTaskFailed(err.message));
+    });
+};
+
+export const postTaskSuccess = (task) => {
+  return {
+    type: ActionTypes.POST_TASK_SUCCESS,
+    payload: "New task created with title : " + task.title,
+  };
+};
+export const postTaskFailed = (errMsg) => {
+  return {
+    type: ActionTypes.POST_TASK_FAILED,
+    payload: errMsg,
+  };
+};
 export const tasksLoading = () => {
   return {
     type: ActionTypes.TASKS_LOADING,
@@ -213,7 +254,7 @@ export const fetchUser = (user) => (dispatch) => {
       var pwd = bytes.toString(CryptoJS.enc.Utf8);
       if (pwd === user.password) {
         dispatch(fetchTasks(res.data[0].id));
-        dispatch(loginSuccess(user));
+        dispatch(loginSuccess(res.data[0]));
       } else {
         dispatch(loginFailed("Check your email or password"));
       }
@@ -232,7 +273,7 @@ export const loginUser = (user) => (dispatch) => {
 export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("token");
   dispatch(logoutSuccess());
-}
+};
 
 export const loginWithToken = (token) => (dispatch) => {
   var bytes = AES.decrypt(token, "123");

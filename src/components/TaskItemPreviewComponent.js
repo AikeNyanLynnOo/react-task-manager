@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 
 import BadgeToolTip from "./BadgeTooltipComponent";
 import ToastGenerator from "./ToastGeneratorComponent";
+import moment from "moment";
+
 function TaskItemPreview({ task, taskLabel, taskProject, cmtCount }) {
   const [priority, setPriority] = useState(false);
   const [label, setLabel] = useState(false);
@@ -87,7 +89,8 @@ function TaskItemPreview({ task, taskLabel, taskProject, cmtCount }) {
         )}
         <div className="mt-3 mb-2">
           <span>
-            <i className="fa fa-calendar"></i> {task.dueDate}{" "}
+            <i className="fa fa-calendar"></i>{" "}
+            {moment(task.dueDate).format("MMM Do YY")}{" "}
           </span>
           <span>
             <i className="fa fa-comment"></i> {cmtCount}

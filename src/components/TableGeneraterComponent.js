@@ -6,7 +6,7 @@ import { Button, Progress } from "reactstrap";
 import ToastGenerator from "./ToastGeneratorComponent";
 import TaskEditModal from "./TaskEditModalComponent";
 import { Link } from "react-router-dom";
-
+import moment from "moment";
 const { SearchBar } = Search;
 
 class TableGenerater extends React.Component {
@@ -14,14 +14,12 @@ class TableGenerater extends React.Component {
     super(props);
     this.state = {
       toastOpen: false,
-      isOpen: false,
-      editTask: null,
       selected: [],
     };
     this.handleOnSelect = this.handleOnSelect.bind(this);
     this.handleOnSelectAll = this.handleOnSelectAll.bind(this);
     this.toggleToast = this.toggleToast.bind(this);
-    this.toggle = this.toggle.bind(this);
+    // this.toggle = this.toggle.bind(this);
   }
   handleOnSelect(row, isSelect) {
     if (isSelect) {
@@ -61,13 +59,6 @@ class TableGenerater extends React.Component {
       toastOpen: !this.state.toastOpen,
     });
   }
-  toggle(row) {
-    row.title &&
-      this.setState({
-        editTask: row,
-      });
-    this.setState({ isOpen: !this.state.isOpen });
-  }
   render() {
     const selectRow = {
       mode: "checkbox",
@@ -102,6 +93,9 @@ class TableGenerater extends React.Component {
         sort: true,
         headerStyle: (colum, colIndex) => {
           return { width: "100px", textAlign: "center" };
+        },
+        formatter: (rowContent, row) => {
+          return <span>{moment(row.dueDate).format("MMM Do YY")}</span>;
         },
       },
       {
@@ -148,7 +142,11 @@ class TableGenerater extends React.Component {
         },
         formatter: (rowContent, row) => {
           return (
-            <Button color="info" size="sm" onClick={() => this.toggle(row)}>
+            <Button
+              color="info"
+              size="sm"
+              onClick={() => this.props.stageEditTask(row)}
+            >
               <i className="fa fa-pencil"></i>
             </Button>
           );
@@ -166,11 +164,6 @@ class TableGenerater extends React.Component {
               ? { title: "All Tasks" }
               : this.state.selected[0]
           }
-        />
-        <TaskEditModal
-          toggle={this.toggle}
-          isOpen={this.state.isOpen}
-          task={this.state.editTask}
         />
         <ToolkitProvider
           keyField="id"

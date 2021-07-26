@@ -11,7 +11,8 @@
 .navbar-toggler {
   border-color: white;
 }
-.navbar-toggler:focus,.navbar-toggler:active{
+.navbar-toggler:focus,
+.navbar-toggler:active {
   box-shadow: none;
 }
 .navbar-toggler-icon {

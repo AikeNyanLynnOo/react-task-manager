@@ -4,13 +4,20 @@ export const Comments = (
   state = {
     isLoading: true,
     errMsg: null,
+    successMsg: null,
     comments: [],
   },
   action
 ) => {
   switch (action.type) {
     case ActionTypes.COMMENTS_LOADING:
-      return { ...state, isLoading: true, errMsg: null, comments: [] };
+      return {
+        ...state,
+        isLoading: true,
+        errMsg: null,
+        comments: [],
+        successMsg: null,
+      };
     case ActionTypes.ADD_COMMENTS:
       return {
         ...state,
@@ -19,7 +26,19 @@ export const Comments = (
         comments: action.payload,
       };
     case ActionTypes.COMMENTS_FAILED:
-      return { ...state, isLoading: false, errMsg: action.payload };
+      return {
+        ...state,
+        isLoading: false,
+        errMsg: action.payload,
+        successMsg: null,
+      };
+    case ActionTypes.POST_NEW_CMT_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        errMsg: null,
+        successMsg: action.payload,
+      };
     default:
       return state;
   }

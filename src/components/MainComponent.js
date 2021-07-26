@@ -20,6 +20,7 @@ import {
   logoutUser,
   registerUser,
   postTask,
+  putTask,
 } from "../redux/actions/ActionCreators";
 
 const mapStateToProps = (state) => {
@@ -43,6 +44,8 @@ const mapDispatchToProps = (dispatch) => {
     registerUser: (user) => dispatch(registerUser(user)),
     logoutUser: () => dispatch(logoutUser()),
     postTask: (task, userId) => dispatch(postTask(task, userId)),
+    putTask: (id, task, labels, projects) =>
+      dispatch(putTask(id, task, labels, projects)),
   };
 };
 class Main extends React.Component {
@@ -60,6 +63,12 @@ class Main extends React.Component {
           task={this.props.tasks.tasks.filter((task) => task.id === taskId)[0]}
           history={history}
           auth={this.props.auth}
+          putTask={this.props.putTask}
+          labels={this.props.labels}
+          projects={this.props.projects}
+          isLoading={this.props.tasks.isLoading}
+          errMsg={this.props.tasks.errMsg}
+          successMsg={this.props.tasks.successMsg}
         ></TaskDetail>
       );
     };
@@ -75,6 +84,7 @@ class Main extends React.Component {
                   tasks={this.props.tasks.tasks}
                   isLoading={this.props.tasks.isLoading}
                   errMsg={this.props.tasks.errMsg}
+                  successMsg={this.props.tasks.successMsg}
                   comments={this.props.comments}
                   projects={this.props.projects}
                   labels={this.props.labels}
@@ -90,10 +100,13 @@ class Main extends React.Component {
                   tasks={this.props.tasks.tasks}
                   isLoading={this.props.tasks.isLoading}
                   errMsg={this.props.tasks.errMsg}
+                  successMsg={this.props.tasks.successMsg}
                   projects={this.props.projects}
                   labels={this.props.labels}
+                  comments={this.props.comments}
                   auth={this.props.auth}
                   postTask={this.props.postTask}
+                  putTask={this.props.putTask}
                 />
               )}
             ></Route>

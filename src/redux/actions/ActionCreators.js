@@ -3,6 +3,7 @@ import axios from "axios";
 import { BASE_URL } from "../../shared/baseUrl";
 
 import CryptoJS, { AES } from "crypto-js";
+import moment from "moment";
 // Fetchs
 export const fetchTasks = (userId) => (dispatch) => {
   dispatch(tasksLoading());
@@ -44,9 +45,6 @@ export const mutateTasks = (tasks, projects, labels) => {
     var newTask = task;
     newTask.project = projects.filter((p) => p.id === task.project)[0].title;
     newTask.label = labels.filter((l) => l.id === task.label)[0].text;
-    newTask.dueDate = new Intl.DateTimeFormat(['ban', 'id']).format(
-      new Date(task.dueDate)
-    );
     return newTask;
   });
 };
@@ -102,10 +100,28 @@ export const postTask = (task, userId) => (dispatch) => {
       remindMe: task.remindMe,
     })
     .then((res) => {
-      if (res.status === 200) {
-        dispatch(fetchComments());
-        dispatch(fetchTasks(userId));
-        dispatch(postTaskSuccess(res.data[0]));
+      if (res.status === 201) {
+        if (task.comment !== "") {
+          axios
+            .post(BASE_URL + "/comments", {
+              taskId: res.data.id,
+              text: task.comment,
+              date: moment(),
+            })
+            .then((res) => {
+              //
+              dispatch(fetchComments());
+              dispatch(fetchTasks(userId));
+              dispatch(postTaskSuccess(task));
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } else {
+          dispatch(fetchComments());
+          dispatch(fetchTasks(userId));
+          dispatch(postTaskSuccess(task));
+        }
       }
     })
     .catch((err) => {
@@ -113,15 +129,79 @@ export const postTask = (task, userId) => (dispatch) => {
     });
 };
 
+export const putTask = (id, task) => (dispatch) => {
+  return axios
+    .put(BASE_URL + `/tasks/${id}`, {
+      userId: task.userId,
+      title: task.title,
+      dueDate: task.dueDate,
+      dueTime: task.dueTime,
+      progress: +task.progress,
+      priority: +task.priority,
+      label: +task.label,
+      project: +task.project,
+      remindMe: task.remindMe,
+    })
+    .then((res) => {
+      if (res.status === 200) {
+        if (task.comment !== "") {
+          axios
+            .post(BASE_URL + "/comments", {
+              taskId: res.data.id,
+              text: task.comment,
+              date: moment(),
+            })
+            .then((res) => {
+              //
+              dispatch(fetchComments());
+              dispatch(fetchTasks(task.userId));
+              dispatch(postNewCmtSuccess());
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } else {
+          dispatch(fetchComments());
+          dispatch(fetchTasks(task.userId));
+          dispatch(putTaskSuccess(task));
+        }
+      }
+    })
+    .catch((err) => {
+      dispatch(putTaskFailed(err.message));
+    });
+};
+
+
+
+export const postNewCmtSuccess = () => {
+  return {
+    type: ActionTypes.POST_NEW_CMT_SUCCESS,
+    payload: "New comment is posted",
+  };
+};
+
 export const postTaskSuccess = (task) => {
   return {
     type: ActionTypes.POST_TASK_SUCCESS,
-    payload: "New task created with title : " + task.title,
+    payload: "New task created : " + task.title,
   };
 };
 export const postTaskFailed = (errMsg) => {
   return {
     type: ActionTypes.POST_TASK_FAILED,
+    payload: errMsg,
+  };
+};
+export const putTaskSuccess = (task) => {
+  return {
+    type: ActionTypes.PUT_TASK_SUCCESS,
+    payload: "Updated task : " + task.title,
+  };
+};
+export const putTaskFailed = (errMsg) => {
+  return {
+    type: ActionTypes.PUT_TASK_FAILED,
     payload: errMsg,
   };
 };

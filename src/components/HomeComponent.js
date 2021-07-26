@@ -14,6 +14,7 @@ class Home extends React.Component {
       <Fragment>
         {this.props.isLoading && <Loading />}
         {this.props.errMsg && <Message msg={this.props.errMsg} type="error" />}
+        
         {!this.props.isLoading && !this.props.errMsg && (
           <Row>
             <Col lg={{ size: 4, offset: 2 }}>

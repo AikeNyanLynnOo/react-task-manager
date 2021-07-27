@@ -4,7 +4,10 @@ import { BASE_URL } from "../../shared/baseUrl";
 
 import CryptoJS, { AES } from "crypto-js";
 import moment from "moment";
-// Fetchs
+
+// Tasks
+
+// Tasks-dispatches
 export const fetchTasks = (userId) => (dispatch) => {
   dispatch(tasksLoading());
   return axios
@@ -40,51 +43,6 @@ export const fetchTasks = (userId) => (dispatch) => {
       dispatch(tasksFailed(err.message));
     });
 };
-export const mutateTasks = (tasks, projects, labels) => {
-  return tasks.map((task) => {
-    var newTask = task;
-    newTask.project = projects.filter((p) => p.id === task.project)[0].title;
-    newTask.label = labels.filter((l) => l.id === task.label)[0].text;
-    return newTask;
-  });
-};
-export const fetchComments = () => (dispatch) => {
-  dispatch(commentsLoading());
-  return axios
-    .get(BASE_URL + "/comments")
-    .then((res) => {
-      dispatch(addcomments(res.data));
-    })
-    .catch((err) => {
-      dispatch(commentsFailed(err.message));
-    });
-};
-export const fetchLabels = () => (dispatch) => {
-  dispatch(labelsLoading());
-  return axios
-    .get(BASE_URL + "/labels")
-    .then((res) => {
-      dispatch(addLabels(res.data));
-    })
-    .catch((err) => {
-      dispatch(labelsFailed(err.message));
-    });
-};
-export const fetchProjects = () => (dispatch) => {
-  dispatch(projectsLoading());
-  return axios
-    .get(BASE_URL + "/projects")
-    .then((res) => {
-      dispatch(addProjects(res.data));
-    })
-    .catch((err) => {
-      dispatch(projectsFailed(err.message));
-    });
-};
-
-// actions
-
-// tasks
 
 export const postTask = (task, userId) => (dispatch) => {
   return axios
@@ -172,15 +130,17 @@ export const putTask = (id, task) => (dispatch) => {
     });
 };
 
-
-
-export const postNewCmtSuccess = () => {
-  return {
-    type: ActionTypes.POST_NEW_CMT_SUCCESS,
-    payload: "New comment is posted",
-  };
+// Tasks-methods
+export const mutateTasks = (tasks, projects, labels) => {
+  return tasks.map((task) => {
+    var newTask = task;
+    newTask.project = projects.filter((p) => p.id === task.project)[0].title;
+    newTask.label = labels.filter((l) => l.id === task.label)[0].text;
+    return newTask;
+  });
 };
 
+// Tasks-actions
 export const postTaskSuccess = (task) => {
   return {
     type: ActionTypes.POST_TASK_SUCCESS,
@@ -225,7 +185,34 @@ export const tasksFailed = (errMsg) => {
   };
 };
 
-// comments
+// Comments
+
+// Comments-dispatches
+export const fetchComments = () => (dispatch) => {
+  dispatch(commentsLoading());
+  return axios
+    .get(BASE_URL + "/comments")
+    .then((res) => {
+      dispatch(addcomments(res.data));
+    })
+    .catch((err) => {
+      dispatch(commentsFailed(err.message));
+    });
+};
+
+export const deleteComment = (id) => (dispatch) => {
+  return axios
+    .delete(BASE_URL + `/comments/${id}`)
+    .then((res) => {
+      console.log("Deleted comment with id" + res.data);
+      dispatch(fetchComments());
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+};
+
+// Comments-actions
 export const commentsLoading = () => {
   return {
     type: ActionTypes.COMMENTS_LOADING,
@@ -246,8 +233,29 @@ export const commentsFailed = (errMsg) => {
   };
 };
 
-// labels
+export const postNewCmtSuccess = () => {
+  return {
+    type: ActionTypes.POST_NEW_CMT_SUCCESS,
+    payload: "New comment is posted",
+  };
+};
 
+// Labels
+
+// Labels-dispatches
+export const fetchLabels = () => (dispatch) => {
+  dispatch(labelsLoading());
+  return axios
+    .get(BASE_URL + "/labels")
+    .then((res) => {
+      dispatch(addLabels(res.data));
+    })
+    .catch((err) => {
+      dispatch(labelsFailed(err.message));
+    });
+};
+
+// Labels-actions
 export const labelsLoading = () => {
   return {
     type: ActionTypes.LABELS_LOADING,
@@ -269,8 +277,22 @@ export const labelsFailed = (errMsg) => {
   };
 };
 
-// projects
+// Projects
 
+// Projects-dispatches
+export const fetchProjects = () => (dispatch) => {
+  dispatch(projectsLoading());
+  return axios
+    .get(BASE_URL + "/projects")
+    .then((res) => {
+      dispatch(addProjects(res.data));
+    })
+    .catch((err) => {
+      dispatch(projectsFailed(err.message));
+    });
+};
+
+// Projects-actions
 export const projectsLoading = () => {
   return {
     type: ActionTypes.PROJECTS_LOADING,
@@ -293,6 +315,7 @@ export const projectsFailed = (errMsg) => {
 
 // Auth
 
+// Auth-dispatches
 export const registerUser = (user) => (dispatch) => {
   return axios
     .get(BASE_URL + "/users", {
@@ -363,6 +386,7 @@ export const loginWithToken = (token) => (dispatch) => {
   dispatch(fetchUser(data));
 };
 
+// Auth-actions
 export const loginLoading = () => {
   return {
     type: ActionTypes.LOGIN_LOADING,

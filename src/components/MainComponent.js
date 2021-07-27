@@ -21,6 +21,7 @@ import {
   registerUser,
   postTask,
   putTask,
+  deleteComment,
 } from "../redux/actions/ActionCreators";
 
 const mapStateToProps = (state) => {
@@ -46,6 +47,7 @@ const mapDispatchToProps = (dispatch) => {
     postTask: (task, userId) => dispatch(postTask(task, userId)),
     putTask: (id, task, labels, projects) =>
       dispatch(putTask(id, task, labels, projects)),
+    deleteComment: (id) => dispatch(deleteComment(id)),
   };
 };
 class Main extends React.Component {
@@ -69,6 +71,7 @@ class Main extends React.Component {
           isLoading={this.props.tasks.isLoading}
           errMsg={this.props.tasks.errMsg}
           successMsg={this.props.tasks.successMsg}
+          deleteComment={this.props.deleteComment}
         ></TaskDetail>
       );
     };
@@ -107,6 +110,7 @@ class Main extends React.Component {
                   auth={this.props.auth}
                   postTask={this.props.postTask}
                   putTask={this.props.putTask}
+                  deleteComment={this.props.deleteComment}
                 />
               )}
             ></Route>

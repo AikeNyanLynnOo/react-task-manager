@@ -46,9 +46,6 @@ class TaskEditModal extends React.Component {
       </div>
     );
   };
-  myToggle() {
-    this.props.toggle();
-  }
   render() {
     const comments =
       this.props.task &&
@@ -163,10 +160,7 @@ class TaskEditModal extends React.Component {
                   onChange={this.props.handleInputChange}
                 />
               </Col>
-              <Col
-                sm={{ size: 3 }}
-                className="text-sm-end mt-3 mt-sm-0"
-              >
+              <Col sm={{ size: 3 }} className="text-sm-end mt-3 mt-sm-0">
                 <Label check>
                   Remind Me?
                   <Input
@@ -224,7 +218,8 @@ class TaskEditModal extends React.Component {
                 {renderComments(comments, {
                   edit: true,
                   deleteComment: (id) => {
-                    alert(`Deleted comment with id ${id}`);
+                    this.props.deleteComment(id);
+                    this.props.toggle();
                   },
                 })}
               </Fragment>

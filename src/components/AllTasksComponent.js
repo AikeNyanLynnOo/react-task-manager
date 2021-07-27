@@ -151,7 +151,11 @@ class AllTasks extends React.Component {
           <Message msg={this.props.comments.successMsg} type="success" />
         )}
         {this.props.comments.errMsg && (
-          <Message msg={this.props.comments.errMsg} type="error" />
+          <Message
+            msg={this.props.comments.errMsg}
+            type="error"
+            onClick={this.props.remove}
+          />
         )}
         {this.checkOk() && (
           <div className="col-12">
@@ -167,6 +171,7 @@ class AllTasks extends React.Component {
               handleBlur={this.handleBlur}
               errors={errors}
               validate={this.validate}
+              deleteComment={this.props.deleteComment}
             />
             <hr />
             <h3>All Tasks</h3>

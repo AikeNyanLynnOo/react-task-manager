@@ -210,6 +210,7 @@ class TaskDetail extends React.Component {
             handleBlur={this.handleBlur}
             errors={errors}
             validate={this.validate}
+            deleteComment={this.props.deleteComment}
           />
           <Row>
             {this.state.prev && (

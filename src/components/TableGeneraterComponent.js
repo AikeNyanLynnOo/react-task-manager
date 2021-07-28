@@ -4,7 +4,6 @@ import paginationFactory from "react-bootstrap-table2-paginator";
 import React, { Fragment } from "react";
 import { Button, Progress } from "reactstrap";
 import ToastGenerator from "./ToastGeneratorComponent";
-import TaskEditModal from "./TaskEditModalComponent";
 import { Link } from "react-router-dom";
 import moment from "moment";
 const { SearchBar } = Search;
@@ -46,7 +45,7 @@ class TableGenerater extends React.Component {
       this.setState({
         selected: select,
       });
-    } else if (select._reactName !== "onClick") {
+    } else if (select instanceof Object && select._reactName !== "onClick") {
       this.setState({
         selected: this.state.selected.concat(select),
       });
@@ -164,6 +163,9 @@ class TableGenerater extends React.Component {
               ? { title: "All Tasks" }
               : this.state.selected[0]
           }
+          deleteTask={this.props.deleteTask}
+          deleteAllTasks={this.props.deleteAllTasks}
+          auth={this.props.auth}
         />
         <ToolkitProvider
           keyField="id"

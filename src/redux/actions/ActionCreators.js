@@ -130,6 +130,46 @@ export const putTask = (id, task) => (dispatch) => {
     });
 };
 
+export const deleteTask = (id, userId) => (dispatch) => {
+  return axios
+    .delete(BASE_URL + `/tasks/${id}`)
+    .then((res) => {
+      dispatch(fetchComments());
+      dispatch(fetchTasks(userId));
+      dispatch(deleteTaskSuccess());
+    })
+    .catch((err) => {
+      dispatch(deleteTaskFailed(err.message));
+    });
+};
+
+export const deleteAllTasks = (auth) => (dispatch) => {
+  console.log("Deleting all " + JSON.stringify(auth));
+  if (auth.isLoggedIn) {
+    return axios
+      .delete(BASE_URL + `/users/${auth.user.id}`)
+      .then((res) => {
+        axios
+          .post(BASE_URL + `/users`, {
+            email: auth.user.email,
+            password: auth.user.password,
+          })
+          .then((res) => {
+            console.log(res);
+            dispatch(fetchComments());
+            dispatch(fetchTasks(res.data.id));
+            dispatch(deleteTaskSuccess());
+          })
+          .catch((err) => {
+            console.log(err.message);
+          });
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }
+};
+
 // Tasks-methods
 export const mutateTasks = (tasks, projects, labels) => {
   return tasks.map((task) => {
@@ -165,6 +205,20 @@ export const putTaskFailed = (errMsg) => {
     payload: errMsg,
   };
 };
+
+export const deleteTaskSuccess = () => {
+  return {
+    type: ActionTypes.DELETE_TASK_SUCCESS,
+    payload: "Deleted successfully!",
+  };
+};
+export const deleteTaskFailed = (errMsg) => {
+  return {
+    type: ActionTypes.DELETE_TASK_FAILED,
+    payload: errMsg,
+  };
+};
+
 export const tasksLoading = () => {
   return {
     type: ActionTypes.TASKS_LOADING,

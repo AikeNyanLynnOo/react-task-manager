@@ -6,7 +6,14 @@ import BadgeToolTip from "./BadgeTooltipComponent";
 import ToastGenerator from "./ToastGeneratorComponent";
 import moment from "moment";
 
-function TaskItemPreview({ task, taskLabel, taskProject, cmtCount }) {
+function TaskItemPreview({
+  task,
+  taskLabel,
+  taskProject,
+  cmtCount,
+  deleteTask,
+  auth
+}) {
   const [priority, setPriority] = useState(false);
   const [label, setLabel] = useState(false);
   const [project, setProject] = useState(false);
@@ -35,6 +42,8 @@ function TaskItemPreview({ task, taskLabel, taskProject, cmtCount }) {
         toastOpen={toastOpen}
         toggleToast={toggleToast}
         selected={selected}
+        deleteTask={deleteTask}
+        auth={auth}
       />
       <Progress
         value={task.progress}

@@ -178,6 +178,9 @@ class AllTasks extends React.Component {
             <TableGenerater
               tasks={this.props.tasks}
               stageEditTask={(row) => this.stageEditTask(row)}
+              deleteTask={this.props.deleteTask}
+              deleteAllTasks={this.props.deleteAllTasks}
+              auth={this.props.auth}
             />
           </div>
         )}

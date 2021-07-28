@@ -22,6 +22,8 @@ import {
   postTask,
   putTask,
   deleteComment,
+  deleteTask,
+  deleteAllTasks,
 } from "../redux/actions/ActionCreators";
 
 const mapStateToProps = (state) => {
@@ -48,6 +50,8 @@ const mapDispatchToProps = (dispatch) => {
     putTask: (id, task, labels, projects) =>
       dispatch(putTask(id, task, labels, projects)),
     deleteComment: (id) => dispatch(deleteComment(id)),
+    deleteTask: (id, userId) => dispatch(deleteTask(id, userId)),
+    deleteAllTasks: (auth) => dispatch(deleteAllTasks(auth)),
   };
 };
 class Main extends React.Component {
@@ -72,6 +76,7 @@ class Main extends React.Component {
           errMsg={this.props.tasks.errMsg}
           successMsg={this.props.tasks.successMsg}
           deleteComment={this.props.deleteComment}
+          deleteTask={this.props.deleteTask}
         ></TaskDetail>
       );
     };
@@ -92,6 +97,7 @@ class Main extends React.Component {
                   projects={this.props.projects}
                   labels={this.props.labels}
                   auth={this.props.auth}
+                  deleteTask={this.props.deleteTask}
                 />
               )}
             ></Route>
@@ -111,6 +117,8 @@ class Main extends React.Component {
                   postTask={this.props.postTask}
                   putTask={this.props.putTask}
                   deleteComment={this.props.deleteComment}
+                  deleteTask={this.props.deleteTask}
+                  deleteAllTasks={this.props.deleteAllTasks}
                 />
               )}
             ></Route>

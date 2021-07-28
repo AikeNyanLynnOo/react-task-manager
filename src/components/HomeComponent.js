@@ -14,7 +14,10 @@ class Home extends React.Component {
       <Fragment>
         {this.props.isLoading && <Loading />}
         {this.props.errMsg && <Message msg={this.props.errMsg} type="error" />}
-        
+        {this.props.successMsg && (
+          <Message msg={this.props.successMsg} type="success" />
+        )}
+
         {!this.props.isLoading && !this.props.errMsg && (
           <Row>
             <Col lg={{ size: 4, offset: 2 }}>
@@ -24,13 +27,15 @@ class Home extends React.Component {
                   <hr className="mb-0" />
                   <List type="unstyled" className="my-task-list">
                     {!this.props.comments.isLoading &&
-                      !this.props.comments.errMsg &&
-                      !this.props.labels.isLoading &&
-                      !this.props.labels.errMsg &&
-                      !this.props.projects.isLoading &&
-                      !this.props.projects.errMsg &&
-                      !this.props.isLoading &&
-                      !this.props.errMsg &&
+                    !this.props.comments.errMsg &&
+                    !this.props.labels.isLoading &&
+                    !this.props.labels.errMsg &&
+                    !this.props.projects.isLoading &&
+                    !this.props.projects.errMsg &&
+                    !this.props.isLoading &&
+                    !this.props.errMsg &&
+                    this.props.tasks.filter((task) => task.progress > 0)
+                      .length > 0 ? (
                       this.props.tasks
                         .filter((task) => task.progress > 0)
                         .map((task) => {
@@ -45,9 +50,14 @@ class Home extends React.Component {
                                   (cmt) => cmt.taskId === task.id
                                 ).length
                               }
+                              deleteTask={this.props.deleteTask}
+                              auth={this.props.auth}
                             />
                           );
-                        })}
+                        })
+                    ) : (
+                      <span>No tasks available!</span>
+                    )}
                   </List>
                 </CardBody>
               </Card>
@@ -59,13 +69,15 @@ class Home extends React.Component {
                   <hr className="mb-0" />
                   <List type="unstyled" className="my-task-list">
                     {!this.props.comments.isLoading &&
-                      !this.props.comments.errMsg &&
-                      !this.props.labels.isLoading &&
-                      !this.props.labels.errMsg &&
-                      !this.props.projects.isLoading &&
-                      !this.props.projects.errMsg &&
-                      !this.props.isLoading &&
-                      !this.props.errMsg &&
+                    !this.props.comments.errMsg &&
+                    !this.props.labels.isLoading &&
+                    !this.props.labels.errMsg &&
+                    !this.props.projects.isLoading &&
+                    !this.props.projects.errMsg &&
+                    !this.props.isLoading &&
+                    !this.props.errMsg &&
+                    this.props.tasks.filter((task) => !task.progress > 0)
+                      .length > 0 ? (
                       this.props.tasks
                         .filter((task) => !task.progress > 0)
                         .map((task) => {
@@ -80,9 +92,14 @@ class Home extends React.Component {
                                   (cmt) => cmt.taskId === task.id
                                 ).length
                               }
+                              deleteTask={this.props.deleteTask}
+                              auth={this.props.auth}
                             />
                           );
-                        })}
+                        })
+                    ) : (
+                      <span>No tasks available!</span>
+                    )}
                   </List>
                 </CardBody>
               </Card>

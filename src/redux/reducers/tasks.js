@@ -36,7 +36,6 @@ export const Tasks = (
         successMsg: null,
       };
     case ActionTypes.PUT_TASK_SUCCESS:
-      console.log("put task success")
       return {
         ...state,
         isLoading: false,
@@ -44,6 +43,20 @@ export const Tasks = (
         successMsg: action.payload,
       };
     case ActionTypes.PUT_TASK_FAILED:
+      return {
+        ...state,
+        isLoading: false,
+        errMsg: action.payload,
+        successMsg: null,
+      };
+    case ActionTypes.DELETE_TASK_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        errMsg: null,
+        successMsg: action.payload,
+      };
+    case ActionTypes.DELETE_TASK_FAILED:
       return {
         ...state,
         isLoading: false,

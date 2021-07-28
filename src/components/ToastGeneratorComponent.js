@@ -23,7 +23,20 @@ function ToastGenerator(props) {
         <Button color="light" size="sm" onClick={props.toggleToast}>
           cancel
         </Button>
-        <Button color="info" size="sm" onClick={props.toggleToast}>
+        <Button
+          color="info"
+          size="sm"
+          onClick={() => {
+            if (props.selected.title !== "All Tasks") {
+              console.log("deleting task with " + props.selected.id);
+              props.deleteTask(props.selected.id, props.auth.user.id);
+              props.toggleToast();
+            } else {
+              props.deleteAllTasks && props.deleteAllTasks(props.auth);
+              props.toggleToast();
+            }
+          }}
+        >
           Yes
         </Button>
       </div>

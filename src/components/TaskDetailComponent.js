@@ -200,6 +200,8 @@ class TaskDetail extends React.Component {
             toastOpen={this.state.toastOpen}
             toggleToast={this.toggleToast}
             selected={task}
+            auth={this.props.auth}
+            deleteTask={this.props.deleteTask}
           />
           <TaskEditModal
             isOpen={this.state.isOpen}
@@ -298,7 +300,7 @@ class TaskDetail extends React.Component {
         </Fragment>
       );
     } else {
-      return <></>;
+      return <Redirect to="/home"/>;
     }
   }
 }

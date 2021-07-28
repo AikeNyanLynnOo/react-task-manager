@@ -41,8 +41,9 @@ class MenuBar extends React.Component {
                 Options
               </DropdownToggle>
               <DropdownMenu className="my-dropitems" right>
-                <DropdownItem>Projects</DropdownItem>
-                <DropdownItem>Labels</DropdownItem>
+                <DropdownItem>
+                  <Link to="/projects">Projects &amp; Labels</Link>
+                </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
           </Nav>

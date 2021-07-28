@@ -7,6 +7,7 @@ import Login from "./auth/Login";
 import Register from "./auth/Register";
 import Profile from "./auth/Profile";
 import Logout from "./auth/Logout";
+import AllProjectsAndLabels from "./AllProjectsAndLabels";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
@@ -24,6 +25,7 @@ import {
   deleteComment,
   deleteTask,
   deleteAllTasks,
+  postNewProjectOrLabel,
 } from "../redux/actions/ActionCreators";
 
 const mapStateToProps = (state) => {
@@ -52,6 +54,8 @@ const mapDispatchToProps = (dispatch) => {
     deleteComment: (id) => dispatch(deleteComment(id)),
     deleteTask: (id, userId) => dispatch(deleteTask(id, userId)),
     deleteAllTasks: (auth) => dispatch(deleteAllTasks(auth)),
+    postNewProjectOrLabel: (type, title) =>
+      dispatch(postNewProjectOrLabel(type, title)),
   };
 };
 class Main extends React.Component {
@@ -123,6 +127,26 @@ class Main extends React.Component {
               )}
             ></Route>
             <Route path="/tasks/:taskId" component={TaskWithId}></Route>
+            <Route
+              path="/projects"
+              component={() => (
+                <AllProjectsAndLabels
+                  projects={this.props.projects}
+                  labels={this.props.labels}
+                  postNewProjectOrLabel={this.props.postNewProjectOrLabel}
+                />
+              )}
+            ></Route>
+            <Route
+              path="/labels"
+              component={() => (
+                <AllProjectsAndLabels
+                  projects={this.props.projects}
+                  labels={this.props.labels}
+                  postNewProjectOrLabel={this.props.postNewProjectOrLabel}
+                />
+              )}
+            ></Route>
             <Route
               exact
               path="/login"

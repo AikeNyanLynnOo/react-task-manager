@@ -15,6 +15,8 @@ import {
 import { renderComments } from "./TaskDetailComponent";
 import { connect } from "react-redux";
 
+import moment from "moment";
+
 const mapStateToProps = (state) => {
   return {
     comments: state.comments,
@@ -143,6 +145,7 @@ class TaskEditModal extends React.Component {
                   type="date"
                   name="dueDate"
                   id="dueDate"
+                  min={moment().format("YYYY-MM-DD")}
                   valid={this.props.errors.dueDate === ""}
                   invalid={this.props.errors.dueDate !== ""}
                   onBlur={this.props.handleBlur("dueDate")}

@@ -296,6 +296,36 @@ export const postNewCmtSuccess = () => {
 
 // Labels
 
+export const postNewProjectOrLabel = (type, title) => (dispatch) => {
+  if (type === "projects") {
+    return axios
+      .post(BASE_URL + "/projects", {
+        title: title,
+        createdAt: moment(),
+      })
+      .then((res) => {
+        dispatch(postNewProjectSuccess("New Project " + title + "is created"));
+        dispatch(fetchProjects());
+      })
+      .catch((err) => {
+        dispatch(postNewProjectSuccess(err.message));
+      });
+  } else {
+    return axios
+      .post(BASE_URL + "/labels", {
+        text: title,
+        createdAt: moment(),
+      })
+      .then((res) => {
+        dispatch(postNewProjectSuccess("New Label " + title + "is created"));
+        dispatch(fetchLabels());
+      })
+      .catch((err) => {
+        dispatch(postNewProjectSuccess(err.message));
+      });
+  }
+};
+
 // Labels-dispatches
 export const fetchLabels = () => (dispatch) => {
   dispatch(labelsLoading());
@@ -327,6 +357,19 @@ export const addLabels = (labels) => {
 export const labelsFailed = (errMsg) => {
   return {
     type: ActionTypes.LABELS_FAILED,
+    payload: errMsg,
+  };
+};
+
+export const postNewLabelSuccess = (msg) => {
+  return {
+    type: ActionTypes.POST_NEW_LABEL_SUCCESS,
+    payload: msg,
+  };
+};
+export const postNewLabelFailed = (errMsg) => {
+  return {
+    type: ActionTypes.POST_NEW_LABEL_FAILED,
     payload: errMsg,
   };
 };
@@ -363,6 +406,19 @@ export const addProjects = (projects) => {
 export const projectsFailed = (errMsg) => {
   return {
     type: ActionTypes.PROJECTS_FAILED,
+    payload: errMsg,
+  };
+};
+
+export const postNewProjectSuccess = (msg) => {
+  return {
+    type: ActionTypes.POST_NEW_PROJECT_SUCCESS,
+    payload: msg,
+  };
+};
+export const postNewProjectFailed = (errMsg) => {
+  return {
+    type: ActionTypes.POST_NEW_PROJECT_FAILED,
     payload: errMsg,
   };
 };

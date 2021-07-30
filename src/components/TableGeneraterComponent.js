@@ -14,6 +14,7 @@ class TableGenerater extends React.Component {
     this.state = {
       toastOpen: false,
       selected: [],
+      toDelete: null,
     };
     this.handleOnSelect = this.handleOnSelect.bind(this);
     this.handleOnSelectAll = this.handleOnSelectAll.bind(this);
@@ -22,39 +23,44 @@ class TableGenerater extends React.Component {
   }
   handleOnSelect(row, isSelect) {
     if (isSelect) {
-      this.toggleToast(row);
+      // this.toggleToast(row);
+      this.props.changeComplete({ ...row, isComplete: true });
     } else {
-      this.toggleToast();
+      // this.toggleToast();
+      this.props.changeComplete({ ...row, isComplete: false });
     }
   }
   handleOnSelectAll(isSelect, rows) {
     if (isSelect) {
-      this.setState({
-        selected: rows,
-      });
-      this.toggleToast(rows);
+      // this.setState({
+      //   selected: rows,
+      // });
+      // this.toggleToast(rows);
+      this.props.changeCompleteAll(rows, this.props.auth.user.id, true);
     } else {
-      this.setState({
-        selected: [],
-      });
-      this.toggleToast();
+      // this.setState({
+      //   selected: [],
+      // });
+      // this.toggleToast();
+      this.props.changeCompleteAll(rows, this.props.auth.user.id, false);
     }
   }
   toggleToast(select) {
-    if (select instanceof Array) {
-      this.setState({
-        selected: select,
-      });
-    } else if (select instanceof Object && select._reactName !== "onClick") {
-      this.setState({
-        selected: this.state.selected.concat(select),
-      });
-    } else {
-      this.setState({
-        selected: [],
-      });
-    }
+    // if (select instanceof Array) {
+    //   this.setState({
+    //     selected: select,
+    //   });
+    // } else if (select instanceof Object && select._reactName !== "onClick") {
+    //   this.setState({
+    //     selected: this.state.selected.concat(select),
+    //   });
+    // } else {
+    //   this.setState({
+    //     selected: [],
+    //   });
+    // }
     this.setState({
+      toDelete: select,
       toastOpen: !this.state.toastOpen,
     });
   }
@@ -65,7 +71,11 @@ class TableGenerater extends React.Component {
       style: { backgroundColor: "#F8F9FA" },
       onSelect: this.handleOnSelect,
       onSelectAll: this.handleOnSelectAll,
-      selected: [...this.state.selected.map((row) => row.id)],
+      selected: [
+        ...this.props.tasks
+          .filter((row) => row.isComplete === true)
+          .map((tsk) => tsk.id),
+      ],
     };
     const columns = [
       {
@@ -79,7 +89,20 @@ class TableGenerater extends React.Component {
               >
                 {row.title}
               </Link>
-              {moment(row.dueDate).isBefore(moment()) ? (
+
+              {row.isComplete ? (
+                <span
+                  style={{
+                    color: "white",
+                    backgroundColor: "tomato",
+                    padding: 4 + "px",
+                    borderRadius: 3 + "px",
+                    marginLeft: 5 + "px",
+                  }}
+                >
+                  completed
+                </span>
+              ) : moment(row.dueDate).isBefore(moment()) ? (
                 <span
                   style={{
                     color: "white",
@@ -151,20 +174,30 @@ class TableGenerater extends React.Component {
       },
       {
         dataField: "",
-        text: "Edit",
+        text: "Action",
         align: "left",
         headerStyle: (colum, colIndex) => {
-          return { width: "50px", textAlign: "center" };
+          return { width: "80px", textAlign: "center" };
         },
         formatter: (rowContent, row) => {
           return (
-            <Button
-              color="info"
-              size="sm"
-              onClick={() => this.props.stageEditTask(row)}
-            >
-              <i className="fa fa-pencil"></i>
-            </Button>
+            <div>
+              <Button
+                color="info"
+                size="sm"
+                onClick={() => this.props.stageEditTask(row)}
+              >
+                <i className="fa fa-pencil"></i>
+              </Button>
+              <Button
+                className="ms-0 ms-md-1"
+                color="danger"
+                size="sm"
+                onClick={() => this.toggleToast(row)}
+              >
+                <i className="fa fa-trash"></i>
+              </Button>
+            </div>
           );
         },
       },
@@ -175,13 +208,8 @@ class TableGenerater extends React.Component {
         <ToastGenerator
           toastOpen={this.state.toastOpen}
           toggleToast={this.toggleToast}
-          selected={
-            this.state.selected.length > 1
-              ? { title: "All Tasks" }
-              : this.state.selected[0]
-          }
+          selected={this.state.toDelete}
           deleteTask={this.props.deleteTask}
-          deleteAllTasks={this.props.deleteAllTasks}
           auth={this.props.auth}
         />
         <ToolkitProvider

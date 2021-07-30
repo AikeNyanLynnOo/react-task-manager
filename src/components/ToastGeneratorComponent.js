@@ -15,7 +15,7 @@ function ToastGenerator(props) {
       </Row>
       <Row className="px-3 pt-3">
         <p>
-          Have you completed{" "}
+          Are you sure to delete{" "}
           <strong>{props.selected && props.selected.title}</strong> ?
         </p>
       </Row>
@@ -27,14 +27,13 @@ function ToastGenerator(props) {
           color="info"
           size="sm"
           onClick={() => {
-            if (props.selected.title !== "All Tasks") {
-              console.log("deleting task with " + props.selected.id);
-              props.deleteTask(props.selected.id, props.auth.user.id);
-              props.toggleToast();
-            } else {
-              props.deleteAllTasks && props.deleteAllTasks(props.auth);
-              props.toggleToast();
-            }
+            // if (props.selected.title === "All Tasks") {
+            //   props.deleteAllTasks && props.deleteAllTasks(props.auth);
+            //   props.toggleToast();
+            // } else {
+            props.deleteTask(props.selected.id, props.auth.user.id);
+            props.toggleToast();
+            // }
           }}
         >
           Yes

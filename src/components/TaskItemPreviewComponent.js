@@ -3,7 +3,6 @@ import { Col, Row, Progress, Input } from "reactstrap";
 import { Link } from "react-router-dom";
 
 import BadgeToolTip from "./BadgeTooltipComponent";
-import ToastGenerator from "./ToastGeneratorComponent";
 import moment from "moment";
 
 function TaskItemPreview({
@@ -11,21 +10,20 @@ function TaskItemPreview({
   taskLabel,
   taskProject,
   cmtCount,
-  deleteTask,
-  auth
+  changeComplete,
 }) {
   const [priority, setPriority] = useState(false);
   const [label, setLabel] = useState(false);
   const [project, setProject] = useState(false);
-  const [selected, setSelected] = useState({});
-  const [toastOpen, setToastOpen] = useState(false);
+  // const [selected, setSelected] = useState({});
+  // const [toastOpen, setToastOpen] = useState(false);
 
-  const toggleToast = (selected) => {
-    if (selected) {
-      setSelected(selected);
-    }
-    setToastOpen(!toastOpen);
-  };
+  // const toggleToast = (selected) => {
+  //   if (selected) {
+  //     setSelected(selected);
+  //   }
+  //   setToastOpen(!toastOpen);
+  // };
 
   const togglePriority = () => {
     setPriority(!priority);
@@ -38,13 +36,13 @@ function TaskItemPreview({
   };
   return (
     <div className="mt-2 my-bg-light">
-      <ToastGenerator
+      {/* <ToastGenerator
         toastOpen={toastOpen}
         toggleToast={toggleToast}
         selected={selected}
         deleteTask={deleteTask}
         auth={auth}
-      />
+      /> */}
       <Progress
         value={task.progress}
         color="primary"
@@ -65,8 +63,13 @@ function TaskItemPreview({
               type="checkbox"
               name="completeTask"
               id="completeTask"
-              checked={toastOpen}
-              onChange={() => toggleToast(task)}
+              checked={task.isComplete}
+              onChange={(e) => {
+                changeComplete({
+                  ...task,
+                  isComplete: !task.isComplete,
+                });
+              }}
             />
           </Col>
         </Row>

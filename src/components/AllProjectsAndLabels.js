@@ -38,9 +38,17 @@ class AllProjectsAndLabels extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     if (this.state.type === "project") {
-      this.props.postNewProjectOrLabel("projects", this.state.title);
+      this.props.postNewProjectOrLabel(
+        this.props.auth.user.id,
+        "projects",
+        this.state.title
+      );
     } else {
-      this.props.postNewProjectOrLabel("labels", this.state.title);
+      this.props.postNewProjectOrLabel(
+        this.props.auth.user.id,
+        "labels",
+        this.state.title
+      );
     }
   }
   render() {
@@ -157,6 +165,7 @@ class AllProjectsAndLabels extends React.Component {
                               .classList.add("btn-primary");
 
                             this.props.editProject(
+                              this.props.auth.user.id,
                               pj.id,
                               this.state.editTitle,
                               pj.createdAt
@@ -169,7 +178,11 @@ class AllProjectsAndLabels extends React.Component {
                       <button
                         className="btn btn-danger btn-sm"
                         onClick={() =>
-                          this.props.deleteProjectOrLabel(pj.id, "projects")
+                          this.props.deleteProjectOrLabel(
+                            this.props.auth.user.id,
+                            pj.id,
+                            "projects"
+                          )
                         }
                       >
                         <i className="fa fa-trash"></i>
@@ -274,6 +287,7 @@ class AllProjectsAndLabels extends React.Component {
                               .classList.add("btn-primary");
 
                             this.props.editLabel(
+                              this.props.auth.user.id,
                               lb.id,
                               this.state.editText,
                               lb.createdAt
@@ -286,7 +300,11 @@ class AllProjectsAndLabels extends React.Component {
                       <button
                         className="btn btn-danger btn-sm"
                         onClick={() =>
-                          this.props.deleteProjectOrLabel(lb.id, "labels")
+                          this.props.deleteProjectOrLabel(
+                            this.props.auth.user.id,
+                            lb.id,
+                            "labels"
+                          )
                         }
                       >
                         <i className="fa fa-trash"></i>

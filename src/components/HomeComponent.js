@@ -35,6 +35,9 @@ class Home extends React.Component {
     const dueTasks = this.props.tasks.tasks.filter((task) =>
       moment(task.dueDate).isBefore(moment(moment(), "days"))
     );
+    const completedTasks = this.props.tasks.tasks.filter(
+      (task) => task.isComplete === "true"
+    );
     let activeTasks = {};
     switch (this.props.tasks.filter) {
       case 1:
@@ -65,8 +68,13 @@ class Home extends React.Component {
           "To do in " + moment().add(1, "month").format("MMMM");
         break;
       case 5:
+        activeTasks.tasks = completedTasks;
+        activeTasks.filterType = "Completed Tasks";
+        break;
+
+      case 6:
         activeTasks.tasks = dueTasks;
-        activeTasks.filterType = "Dued tasks";
+        activeTasks.filterType = "Dued Tasks";
         break;
       default:
         activeTasks.tasks = tasks.filter((task) =>
@@ -108,7 +116,8 @@ class Home extends React.Component {
                       .add(1, "month")
                       .format("MMMM")}`,
                   },
-                  { id: 5, title: "Due Tasks" },
+                  { id: 5, title: "Completed Tasks" },
+                  { id: 6, title: "Due Tasks" },
                 ].map((flt, index) => {
                   return (
                     <option value={flt.id} key={index}>
@@ -149,7 +158,7 @@ class Home extends React.Component {
                                   (cmt) => cmt.taskId === task.id
                                 ).length
                               }
-                              deleteTask={this.props.deleteTask}
+                              changeComplete={this.props.changeComplete}
                               auth={this.props.auth}
                             />
                           );

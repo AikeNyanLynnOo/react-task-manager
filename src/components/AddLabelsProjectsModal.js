@@ -1,6 +1,5 @@
 import {
   Modal,
-  ModalHeader,
   ModalBody,
   ModalFooter,
   Form,

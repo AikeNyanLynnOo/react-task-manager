@@ -1,7 +1,6 @@
 import React, { Fragment } from "react";
 import {
   Modal,
-  ModalHeader,
   ModalBody,
   ModalFooter,
   Form,
@@ -115,6 +114,11 @@ class TaskEditModal extends React.Component {
                       </option>
                     );
                   })}
+                  {this.props.projects.projects.length < 1 && (
+                    <option disabled={true} selected={true}>
+                      No projects availabe - create first
+                    </option>
+                  )}
                 </Input>
               </Col>
             </FormGroup>
@@ -143,6 +147,11 @@ class TaskEditModal extends React.Component {
                       </option>
                     );
                   })}
+                  {this.props.labels.labels.length < 1 && (
+                    <option disabled={true} selected={true}>
+                      No labels availabe - create first
+                    </option>
+                  )}
                 </Input>
               </Col>
             </FormGroup>
@@ -179,7 +188,7 @@ class TaskEditModal extends React.Component {
                   onChange={this.props.handleInputChange}
                 />
               </Col> */}
-              <Col sm={{ size: 3 }} className="text-sm-end mt-3 mt-sm-0">
+              {/* <Col sm={{ size: 3 }} className="text-sm-end mt-3 mt-sm-0">
                 <Label check>
                   Remind Me?
                   <Input
@@ -191,7 +200,7 @@ class TaskEditModal extends React.Component {
                     onChange={this.props.handleInputChange}
                   />
                 </Label>
-              </Col>
+              </Col> */}
             </FormGroup>
 
             {this.props.task.editing && (

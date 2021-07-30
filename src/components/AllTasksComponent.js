@@ -20,7 +20,7 @@ class AllTasks extends React.Component {
       priority: 1,
       dueDate: moment(moment().add(1, "days")).format("YYYY-MM-DD"),
       dueTime: "",
-      remindMe: false,
+      // remindMe: false,
       progress: 0,
       comments: [],
       comment: "",
@@ -61,10 +61,15 @@ class AllTasks extends React.Component {
     const newRow = { ...row };
     newRow.label = this.props.labels.labels.filter(
       (lb) => lb.text === row.label
-    )[0].id;
+    )[0]
+      ? this.props.labels.labels.filter((lb) => lb.text === row.label)[0].id
+      : 1111;
     newRow.project = this.props.projects.projects.filter(
       (pj) => pj.title === row.project
-    )[0].id;
+    )[0]
+      ? this.props.projects.projects.filter((pj) => pj.title === row.project)[0]
+          .id
+      : 1111;
     newRow.comments = this.props.comments.comments.filter(
       (cmt) => cmt.taskId === row.id
     );
@@ -178,6 +183,8 @@ class AllTasks extends React.Component {
             <TableGenerater
               tasks={this.props.tasks}
               stageEditTask={(row) => this.stageEditTask(row)}
+              changeComplete={this.props.changeComplete}  
+              changeCompleteAll={this.props.changeCompleteAll}  
               deleteTask={this.props.deleteTask}
               deleteAllTasks={this.props.deleteAllTasks}
               auth={this.props.auth}

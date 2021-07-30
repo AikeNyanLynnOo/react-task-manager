@@ -8,6 +8,59 @@ import moment from "moment";
 // Tasks
 
 // Tasks-dispatches
+
+export const changeComplete = (task) => (dispatch) => {
+  return axios
+    .put(BASE_URL + `/tasks/${task.id}`, {
+      ...task,
+    })
+    .then((res) => {
+      dispatch(fetchTasks(task.userId));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const changeCompleteAll = (tasks, userId, isComplete) => (dispatch) => {
+  const myTasks = tasks.slice(1);
+  const firstTask = tasks[0];
+
+  return axios
+    .put(BASE_URL + `/tasks/${firstTask.id}`, {
+      ...firstTask,
+      isComplete: isComplete,
+    })
+    .then((res) => {
+      if (isComplete) {
+        for (const task of myTasks) {
+          axios
+            .put(BASE_URL + `/tasks/${task.id}`, {
+              ...task,
+              isComplete: true,
+            })
+            .then((res) => {})
+            .catch((err) => console.log(err.message));
+        }
+      } else {
+        for (const task of myTasks) {
+          axios
+            .put(BASE_URL + `/tasks/${task.id}`, {
+              ...task,
+              isComplete: false,
+            })
+            .then((res) => {})
+            .catch((err) => console.log(err.message));
+        }
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      dispatch(fetchTasks(userId));
+    });
+};
 export const fetchTasks = (userId) => (dispatch) => {
   console.log("USERID IS " + userId);
   dispatch(tasksLoading());
@@ -15,11 +68,19 @@ export const fetchTasks = (userId) => (dispatch) => {
     .get(BASE_URL + "/tasks")
     .then((resTasks) => {
       axios
-        .get(BASE_URL + "/projects")
+        .get(BASE_URL + "/projects", {
+          params: {
+            userId: userId,
+          },
+        })
         .then((resProjects) => {
           dispatch(addProjects(resProjects.data));
           axios
-            .get(BASE_URL + "/labels")
+            .get(BASE_URL + "/labels", {
+              params: {
+                userId: userId,
+              },
+            })
             .then((resLabels) => {
               dispatch(addLabels(resLabels.data));
               dispatch(
@@ -56,7 +117,6 @@ export const postTask = (task, userId) => (dispatch) => {
       priority: +task.priority,
       label: +task.label,
       project: +task.project,
-      remindMe: task.remindMe,
     })
     .then((res) => {
       if (res.status === 201) {
@@ -99,7 +159,6 @@ export const putTask = (id, task) => (dispatch) => {
       priority: +task.priority,
       label: +task.label,
       project: +task.project,
-      remindMe: task.remindMe,
     })
     .then((res) => {
       if (res.status === 200) {
@@ -309,16 +368,17 @@ export const postNewCmtSuccess = () => {
 
 // Labels
 
-export const postNewProjectOrLabel = (type, title) => (dispatch) => {
+export const postNewProjectOrLabel = (userId, type, title) => (dispatch) => {
   if (type === "projects") {
     return axios
       .post(BASE_URL + "/projects", {
         title: title,
         createdAt: moment(),
+        userId: userId,
       })
       .then((res) => {
         dispatch(postNewProjectSuccess("New Project " + title + "is created"));
-        dispatch(fetchProjects());
+        dispatch(fetchProjects(userId));
       })
       .catch((err) => {
         dispatch(postNewProjectSuccess(err.message));
@@ -328,10 +388,11 @@ export const postNewProjectOrLabel = (type, title) => (dispatch) => {
       .post(BASE_URL + "/labels", {
         text: title,
         createdAt: moment(),
+        userId: userId,
       })
       .then((res) => {
         dispatch(postNewProjectSuccess("New Label " + title + "is created"));
-        dispatch(fetchLabels());
+        dispatch(fetchLabels(userId));
       })
       .catch((err) => {
         dispatch(postNewProjectSuccess(err.message));
@@ -340,10 +401,14 @@ export const postNewProjectOrLabel = (type, title) => (dispatch) => {
 };
 
 // Labels-dispatches
-export const fetchLabels = () => (dispatch) => {
+export const fetchLabels = (userId) => (dispatch) => {
   dispatch(labelsLoading());
   return axios
-    .get(BASE_URL + "/labels")
+    .get(BASE_URL + "/labels", {
+      params: {
+        userId: userId,
+      },
+    })
     .then((res) => {
       dispatch(addLabels(res.data));
     })
@@ -391,54 +456,61 @@ export const postNewLabelFailed = (errMsg) => {
 
 // Projects-dispatches
 
-export const editProject = (id, title, createdAt) => (dispatch) => {
+export const editProject = (userId, id, title, createdAt) => (dispatch) => {
   return axios
     .put(BASE_URL + `/projects/${id}`, {
       title: title,
       updatedAt: moment(),
       createdAt: createdAt,
+      userId: userId,
     })
     .then((res) => {
-      dispatch(fetchProjects());
+      dispatch(fetchProjects(userId));
     })
     .catch((err) => {
       console.log(err);
     });
 };
-export const editLabel = (id, text, createdAt) => (dispatch) => {
+export const editLabel = (userId, id, text, createdAt) => (dispatch) => {
   return axios
     .put(BASE_URL + `/labels/${id}`, {
       text: text,
       updatedAt: moment(),
       createdAt: createdAt,
+      userId: userId,
     })
     .then((res) => {
-      dispatch(fetchLabels());
+      dispatch(fetchLabels(userId));
     })
     .catch((err) => {
       console.log(err);
     });
 };
 
-export const deleteProjectOrLabel = (id, whatToDelete) => (dispatch) => {
-  return axios
-    .delete(BASE_URL + `/${whatToDelete}/${id}`)
-    .then((res) => {
-      if (whatToDelete === "projects") {
-        dispatch(fetchProjects());
-      } else {
-        dispatch(fetchLabels());
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+export const deleteProjectOrLabel =
+  (userId, id, whatToDelete) => (dispatch) => {
+    return axios
+      .delete(BASE_URL + `/${whatToDelete}/${id}`)
+      .then((res) => {
+        if (whatToDelete === "projects") {
+          dispatch(fetchProjects(userId));
+        } else {
+          dispatch(fetchLabels(userId));
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-export const fetchProjects = () => (dispatch) => {
+export const fetchProjects = (userId) => (dispatch) => {
   dispatch(projectsLoading());
   return axios
-    .get(BASE_URL + "/projects")
+    .get(BASE_URL + "/projects", {
+      params: {
+        userId: userId,
+      },
+    })
     .then((res) => {
       dispatch(addProjects(res.data));
     })

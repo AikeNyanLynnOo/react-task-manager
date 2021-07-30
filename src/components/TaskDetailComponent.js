@@ -72,7 +72,7 @@ class TaskDetail extends React.Component {
       priority: 1,
       dueDate: moment(moment().add(1, "days")).format("YYYY-MM-DD"),
       dueTime: "",
-      remindMe: false,
+      // remindMe: false,
       progress: 0,
       comments: [],
       comment: "",
@@ -80,6 +80,7 @@ class TaskDetail extends React.Component {
         title: false,
         dueDate: false,
       },
+      isDeleting: false,
     };
     this.toggleToast = this.toggleToast.bind(this);
     this.toggle = this.toggle.bind(this);
@@ -116,14 +117,18 @@ class TaskDetail extends React.Component {
     } else {
       newTask.label = this.props.labels.labels.filter(
         (lb) => lb.id === +this.state.label
-      )[0] ? this.props.labels.labels.filter(
-        (lb) => lb.id === +this.state.label
-      )[0].text : "Label not chosen";
+      )[0]
+        ? this.props.labels.labels.filter(
+            (lb) => lb.id === +this.state.label
+          )[0].text
+        : "Label not chosen";
       newTask.project = this.props.projects.projects.filter(
         (pj) => pj.id === +this.state.project
-      )[0] ? this.props.projects.projects.filter(
-        (pj) => pj.id === +this.state.project
-      )[0].title : "Project not chosen";
+      )[0]
+        ? this.props.projects.projects.filter(
+            (pj) => pj.id === +this.state.project
+          )[0].title
+        : "Project not chosen";
       this.setState({
         ...this.state,
         ...this.props.newTask,
@@ -257,8 +262,13 @@ class TaskDetail extends React.Component {
                       name="completeTask"
                       id="completeTask"
                       className="me-3"
-                      checked={this.state.toastOpen}
-                      onChange={this.toggleToast}
+                      checked={this.props.task.isComplete}
+                      onChange={(e) => {
+                        this.props.changeComplete({
+                          ...this.props.task,
+                          isComplete: !this.props.task.isComplete,
+                        });
+                      }}
                     ></Input>
                     {task.title}
                   </CardTitle>
@@ -296,6 +306,16 @@ class TaskDetail extends React.Component {
                         onClick={() => this.toggle(true)}
                       >
                         <i className="fa fa-pencil"></i>
+                      </Button>
+                      <Button
+                        className="ms-1"
+                        color="danger"
+                        size="sm"
+                        onClick={() => {
+                          this.toggleToast();
+                        }}
+                      >
+                        <i className="fa fa-trash"></i>
                       </Button>
                     </Col>
                   </Row>

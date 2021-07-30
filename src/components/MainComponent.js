@@ -30,6 +30,8 @@ import {
   editProject,
   editLabel,
   deleteProjectOrLabel,
+  changeComplete,
+  changeCompleteAll,
 } from "../redux/actions/ActionCreators";
 
 const mapStateToProps = (state) => {
@@ -46,8 +48,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchTasks: (userId) => dispatch(fetchTasks(userId)),
     fetchComments: () => dispatch(fetchComments()),
-    fetchLabels: () => dispatch(fetchLabels()),
-    fetchProjects: () => dispatch(fetchProjects()),
+    fetchLabels: (userId) => dispatch(fetchLabels(userId)),
+    fetchProjects: (userId) => dispatch(fetchProjects(userId)),
     loginUser: (user) => dispatch(loginUser(user)),
     loginWithToken: (token) => dispatch(loginWithToken(token)),
     registerUser: (user) => dispatch(registerUser(user)),
@@ -58,15 +60,18 @@ const mapDispatchToProps = (dispatch) => {
     deleteComment: (id) => dispatch(deleteComment(id)),
     deleteTask: (id, userId) => dispatch(deleteTask(id, userId)),
     deleteAllTasks: (auth) => dispatch(deleteAllTasks(auth)),
-    postNewProjectOrLabel: (type, title) =>
-      dispatch(postNewProjectOrLabel(type, title)),
+    postNewProjectOrLabel: (userId, type, title) =>
+      dispatch(postNewProjectOrLabel(userId, type, title)),
     changeFilter: (id) => dispatch(changeFilter(id)),
-    editProject: (id, title, createdAt) =>
-      dispatch(editProject(id, title, createdAt)),
-    editLabel: (id, title, createdAt) =>
-      dispatch(editLabel(id, title, createdAt)),
-    deleteProjectOrLabel: (id, whatToDelete) =>
-      dispatch(deleteProjectOrLabel(id, whatToDelete)),
+    editProject: (userId, id, title, createdAt) =>
+      dispatch(editProject(userId, id, title, createdAt)),
+    editLabel: (userId, id, title, createdAt) =>
+      dispatch(editLabel(userId, id, title, createdAt)),
+    deleteProjectOrLabel: (userId, id, whatToDelete) =>
+      dispatch(deleteProjectOrLabel(userId, id, whatToDelete)),
+    changeComplete: (task) => dispatch(changeComplete(task)),
+    changeCompleteAll: (tasks, userId, isComplete) =>
+      dispatch(changeCompleteAll(tasks, userId, isComplete)),
   };
 };
 class Main extends React.Component {
@@ -92,6 +97,7 @@ class Main extends React.Component {
           successMsg={this.props.tasks.successMsg}
           deleteComment={this.props.deleteComment}
           deleteTask={this.props.deleteTask}
+          changeComplete={this.props.changeComplete}
         ></TaskDetail>
       );
     };
@@ -112,9 +118,9 @@ class Main extends React.Component {
                   projects={this.props.projects}
                   labels={this.props.labels}
                   auth={this.props.auth}
-                  deleteTask={this.props.deleteTask}
                   fetchTasks={this.props.fetchTasks}
                   changeFilter={this.props.changeFilter}
+                  changeComplete={this.props.changeComplete}
                 />
               )}
             ></Route>
@@ -134,6 +140,8 @@ class Main extends React.Component {
                   postTask={this.props.postTask}
                   putTask={this.props.putTask}
                   deleteComment={this.props.deleteComment}
+                  changeComplete={this.props.changeComplete}
+                  changeCompleteAll={this.props.changeCompleteAll}
                   deleteTask={this.props.deleteTask}
                   deleteAllTasks={this.props.deleteAllTasks}
                 />
@@ -150,6 +158,7 @@ class Main extends React.Component {
                   editProject={this.props.editProject}
                   editLabel={this.props.editLabel}
                   deleteProjectOrLabel={this.props.deleteProjectOrLabel}
+                  auth={this.props.auth}
                 />
               )}
             ></Route>
@@ -163,6 +172,7 @@ class Main extends React.Component {
                   editProject={this.props.editProject}
                   editLabel={this.props.editLabel}
                   deleteProjectOrLabel={this.props.deleteProjectOrLabel}
+                  auth={this.props.auth}
                 />
               )}
             ></Route>

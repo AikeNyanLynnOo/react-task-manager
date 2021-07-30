@@ -6,6 +6,7 @@ export const Tasks = (
     errMsg: null,
     successMsg: null,
     tasks: [],
+    filter: 0,
   },
   action
 ) => {
@@ -62,6 +63,14 @@ export const Tasks = (
         isLoading: false,
         errMsg: action.payload,
         successMsg: null,
+      };
+    case ActionTypes.CHANGE_FILTER_TYPE:
+      return {
+        ...state,
+        isLoading: false,
+        errMsg: null,
+        successMsg: null,
+        filter: action.payload,
       };
     default:
       return state;

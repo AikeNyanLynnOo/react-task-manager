@@ -18,9 +18,16 @@ const AddLabelsProjects = (props) => {
       toggle={() => props.toggle()}
       className="modal-md"
     >
-      <ModalHeader toggle={() => props.toggle()}>
-        Add New {props.type === "project" ? "Project" : "Label"}
-      </ModalHeader>
+      <div className="modal-header">
+        <h5 className="modal-title">
+          Add New {props.type === "project" ? "Project" : "Label"}
+        </h5>
+        <button
+          className="btn-close"
+          type="button"
+          onClick={() => props.toggle()}
+        ></button>
+      </div>
       <ModalBody>
         <Form id="my-form" onSubmit={props.handleSubmit}>
           <FormGroup row className="mt-3">

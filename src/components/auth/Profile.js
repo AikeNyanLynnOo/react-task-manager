@@ -1,8 +1,12 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 class Profile extends React.Component {
   render() {
-    return <div>Hello {this.props.user.email}</div>;
+    if (this.props.auth.isLoggedIn) {
+      return <div>Hello {this.props.auth.user.email}</div>;
+    } else {
+      return <Redirect to="/home" />;
+    }
   }
 }
 

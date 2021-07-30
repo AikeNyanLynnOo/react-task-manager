@@ -73,11 +73,28 @@ class TableGenerater extends React.Component {
         text: "Title",
         formatter: (rowContent, row) => {
           return (
-            <Link
-              to={{ pathname: `/tasks/${row.id}`, state: { prev: "/tasks" } }}
-            >
-              {row.title}
-            </Link>
+            <span>
+              <Link
+                to={{ pathname: `/tasks/${row.id}`, state: { prev: "/tasks" } }}
+              >
+                {row.title}
+              </Link>
+              {moment(row.dueDate).isBefore(moment()) ? (
+                <span
+                  style={{
+                    color: "white",
+                    backgroundColor: "tomato",
+                    padding: 4 + "px",
+                    borderRadius: 3 + "px",
+                    marginLeft: 5 + "px",
+                  }}
+                >
+                  dued
+                </span>
+              ) : (
+                ""
+              )}
+            </span>
           );
         },
       },

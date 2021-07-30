@@ -26,8 +26,10 @@ class MenuBar extends React.Component {
   render() {
     return (
       <Navbar color="primary" expand="md" className="fixed-top px-5">
-        <NavbarBrand href="/" className="text-white">
-          To Do List
+        <NavbarBrand>
+          <NavLink to="/home" className="nav-link text-white">
+            To Do List
+          </NavLink>
         </NavbarBrand>
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
@@ -40,38 +42,44 @@ class MenuBar extends React.Component {
               <DropdownToggle nav caret>
                 Options
               </DropdownToggle>
-              <DropdownMenu className="my-dropitems" right>
-                <DropdownItem>
-                  <Link to="/projects">Projects &amp; Labels</Link>
-                </DropdownItem>
+              <DropdownMenu className="drop-options">
+                <Link to="/projects" className="drop-link">
+                  <DropdownItem>Projects &amp; Labels</DropdownItem>
+                </Link>
               </DropdownMenu>
             </UncontrolledDropdown>
           </Nav>
           <Nav className="my-navbar">
             <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav caret>
-                <i className="fa fa-user"></i>
+              <DropdownToggle nav caret className="px-0">
+                {this.props.auth.isLoggedIn ? (
+                  this.props.auth.user.email
+                ) : (
+                  <i className="fa fa-user"></i>
+                )}
               </DropdownToggle>
-              <DropdownMenu className="my-dropitems" right>
+              <DropdownMenu
+                className={this.props.auth.isLoggedIn ? "" : "my-nav-dropitems"}
+              >
                 {!this.props.auth.isLoggedIn && (
                   <React.Fragment>
-                    <DropdownItem>
-                      <Link to="/login">Login</Link>
-                    </DropdownItem>
-                    <DropdownItem>
-                      <Link to="/register">Register</Link>
-                    </DropdownItem>
+                    <Link to="/login" className="drop-link">
+                      <DropdownItem>Login</DropdownItem>
+                    </Link>
+                    <Link to="/register" className="drop-link">
+                      <DropdownItem>Register</DropdownItem>
+                    </Link>
                   </React.Fragment>
                 )}
                 {this.props.auth.isLoggedIn && (
                   <React.Fragment>
-                    <DropdownItem>
-                      <Link to="/profile">Profile</Link>
-                    </DropdownItem>
+                    <Link to="/profile" className="drop-link">
+                      <DropdownItem>Profile</DropdownItem>
+                    </Link>
                     <DropdownItem divider />
-                    <DropdownItem>
-                      <Link to="/logout">Logout</Link>
-                    </DropdownItem>
+                    <Link to="/logout" className="drop-link">
+                      <DropdownItem>Logout</DropdownItem>
+                    </Link>
                   </React.Fragment>
                 )}
               </DropdownMenu>

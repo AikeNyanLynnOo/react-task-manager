@@ -97,10 +97,17 @@ class TaskDetail extends React.Component {
     if (parent) {
       newTask.label = this.props.labels.labels.filter(
         (lb) => lb.text === newTask.label
-      )[0].id;
+      )[0]
+        ? this.props.labels.labels.filter((lb) => lb.text === newTask.label)[0]
+            .id
+        : 1111;
       newTask.project = this.props.projects.projects.filter(
         (pj) => pj.title === newTask.project
-      )[0].id;
+      )[0]
+        ? this.props.projects.projects.filter(
+            (pj) => pj.title === newTask.project
+          )[0].id
+        : 1111;
       this.setState({
         ...this.state,
         ...newTask,
@@ -109,10 +116,14 @@ class TaskDetail extends React.Component {
     } else {
       newTask.label = this.props.labels.labels.filter(
         (lb) => lb.id === +this.state.label
-      )[0].text;
+      )[0] ? this.props.labels.labels.filter(
+        (lb) => lb.id === +this.state.label
+      )[0].text : "Label not chosen";
       newTask.project = this.props.projects.projects.filter(
         (pj) => pj.id === +this.state.project
-      )[0].title;
+      )[0] ? this.props.projects.projects.filter(
+        (pj) => pj.id === +this.state.project
+      )[0].title : "Project not chosen";
       this.setState({
         ...this.state,
         ...this.props.newTask,
@@ -300,7 +311,7 @@ class TaskDetail extends React.Component {
         </Fragment>
       );
     } else {
-      return <Redirect to="/home"/>;
+      return <Redirect to="/home" />;
     }
   }
 }

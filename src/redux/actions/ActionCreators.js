@@ -9,6 +9,7 @@ import moment from "moment";
 
 // Tasks-dispatches
 export const fetchTasks = (userId) => (dispatch) => {
+  console.log("USERID IS " + userId);
   dispatch(tasksLoading());
   return axios
     .get(BASE_URL + "/tasks")
@@ -171,11 +172,23 @@ export const deleteAllTasks = (auth) => (dispatch) => {
 };
 
 // Tasks-methods
+export const changeFilter = (id) => {
+  console.log("ID IS" + id);
+  return {
+    type: ActionTypes.CHANGE_FILTER_TYPE,
+    payload: id,
+  };
+};
+
 export const mutateTasks = (tasks, projects, labels) => {
   return tasks.map((task) => {
     var newTask = task;
-    newTask.project = projects.filter((p) => p.id === task.project)[0].title;
-    newTask.label = labels.filter((l) => l.id === task.label)[0].text;
+    newTask.project = projects.filter((p) => p.id === task.project)[0]
+      ? projects.filter((p) => p.id === task.project)[0].title
+      : "Project not chosen";
+    newTask.label = labels.filter((l) => l.id === task.label)[0]
+      ? labels.filter((l) => l.id === task.label)[0].text
+      : "Label not chosen";
     return newTask;
   });
 };
@@ -377,6 +390,51 @@ export const postNewLabelFailed = (errMsg) => {
 // Projects
 
 // Projects-dispatches
+
+export const editProject = (id, title, createdAt) => (dispatch) => {
+  return axios
+    .put(BASE_URL + `/projects/${id}`, {
+      title: title,
+      updatedAt: moment(),
+      createdAt: createdAt,
+    })
+    .then((res) => {
+      dispatch(fetchProjects());
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+export const editLabel = (id, text, createdAt) => (dispatch) => {
+  return axios
+    .put(BASE_URL + `/labels/${id}`, {
+      text: text,
+      updatedAt: moment(),
+      createdAt: createdAt,
+    })
+    .then((res) => {
+      dispatch(fetchLabels());
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const deleteProjectOrLabel = (id, whatToDelete) => (dispatch) => {
+  return axios
+    .delete(BASE_URL + `/${whatToDelete}/${id}`)
+    .then((res) => {
+      if (whatToDelete === "projects") {
+        dispatch(fetchProjects());
+      } else {
+        dispatch(fetchLabels());
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 export const fetchProjects = () => (dispatch) => {
   dispatch(projectsLoading());
   return axios

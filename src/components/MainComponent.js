@@ -26,6 +26,10 @@ import {
   deleteTask,
   deleteAllTasks,
   postNewProjectOrLabel,
+  changeFilter,
+  editProject,
+  editLabel,
+  deleteProjectOrLabel,
 } from "../redux/actions/ActionCreators";
 
 const mapStateToProps = (state) => {
@@ -40,7 +44,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchTasks: () => dispatch(fetchTasks()),
+    fetchTasks: (userId) => dispatch(fetchTasks(userId)),
     fetchComments: () => dispatch(fetchComments()),
     fetchLabels: () => dispatch(fetchLabels()),
     fetchProjects: () => dispatch(fetchProjects()),
@@ -56,6 +60,13 @@ const mapDispatchToProps = (dispatch) => {
     deleteAllTasks: (auth) => dispatch(deleteAllTasks(auth)),
     postNewProjectOrLabel: (type, title) =>
       dispatch(postNewProjectOrLabel(type, title)),
+    changeFilter: (id) => dispatch(changeFilter(id)),
+    editProject: (id, title, createdAt) =>
+      dispatch(editProject(id, title, createdAt)),
+    editLabel: (id, title, createdAt) =>
+      dispatch(editLabel(id, title, createdAt)),
+    deleteProjectOrLabel: (id, whatToDelete) =>
+      dispatch(deleteProjectOrLabel(id, whatToDelete)),
   };
 };
 class Main extends React.Component {
@@ -93,7 +104,7 @@ class Main extends React.Component {
               path="/home"
               component={() => (
                 <Home
-                  tasks={this.props.tasks.tasks}
+                  tasks={this.props.tasks}
                   isLoading={this.props.tasks.isLoading}
                   errMsg={this.props.tasks.errMsg}
                   successMsg={this.props.tasks.successMsg}
@@ -102,6 +113,8 @@ class Main extends React.Component {
                   labels={this.props.labels}
                   auth={this.props.auth}
                   deleteTask={this.props.deleteTask}
+                  fetchTasks={this.props.fetchTasks}
+                  changeFilter={this.props.changeFilter}
                 />
               )}
             ></Route>
@@ -134,6 +147,9 @@ class Main extends React.Component {
                   projects={this.props.projects}
                   labels={this.props.labels}
                   postNewProjectOrLabel={this.props.postNewProjectOrLabel}
+                  editProject={this.props.editProject}
+                  editLabel={this.props.editLabel}
+                  deleteProjectOrLabel={this.props.deleteProjectOrLabel}
                 />
               )}
             ></Route>
@@ -144,6 +160,9 @@ class Main extends React.Component {
                   projects={this.props.projects}
                   labels={this.props.labels}
                   postNewProjectOrLabel={this.props.postNewProjectOrLabel}
+                  editProject={this.props.editProject}
+                  editLabel={this.props.editLabel}
+                  deleteProjectOrLabel={this.props.deleteProjectOrLabel}
                 />
               )}
             ></Route>
@@ -170,7 +189,7 @@ class Main extends React.Component {
             <Route
               exact
               path="/profile"
-              component={() => <Profile user={this.props.auth.user} />}
+              component={() => <Profile auth={this.props.auth} />}
             ></Route>
 
             <Route

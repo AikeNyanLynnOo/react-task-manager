@@ -61,9 +61,14 @@ class TaskEditModal extends React.Component {
         toggle={() => this.props.toggle()}
         className="modal-lg"
       >
-        <ModalHeader toggle={() => this.props.toggle()}>
-          Add New Task
-        </ModalHeader>
+        <div className="modal-header">
+          <h5 className="modal-title">Add New Task</h5>
+          <button
+            className="btn-close"
+            type="button"
+            onClick={() => this.props.toggle()}
+          ></button>
+        </div>
         <ModalBody>
           <Form id="my-form" onSubmit={this.props.handleSubmit}>
             <FormGroup row className="mt-3">
@@ -97,6 +102,12 @@ class TaskEditModal extends React.Component {
                   value={this.props.task.project}
                   onChange={this.props.handleInputChange}
                 >
+                  {this.props.task.project === 1111 && (
+                    <option value="1111" disabled={true}>
+                      Project not chosen
+                    </option>
+                  )}
+
                   {this.props.projects.projects.map((pj, index) => {
                     return (
                       <option value={pj.id} key={index}>
@@ -120,6 +131,11 @@ class TaskEditModal extends React.Component {
                   value={this.props.task.label}
                   onChange={this.props.handleInputChange}
                 >
+                  {this.props.task.label === 1111 && (
+                    <option value="1111" disabled={true}>
+                      Label not chosen
+                    </option>
+                  )}
                   {this.props.labels.labels.map((lb, index) => {
                     return (
                       <option value={lb.id} key={index}>
@@ -154,7 +170,7 @@ class TaskEditModal extends React.Component {
                 />
                 <FormFeedback>{this.props.errors.dueDate}</FormFeedback>
               </Col>
-              <Col sm={3} className="mt-3 mt-sm-0">
+              {/* <Col sm={3} className="mt-3 mt-sm-0">
                 <Input
                   type="time"
                   name="dueTime"
@@ -162,7 +178,7 @@ class TaskEditModal extends React.Component {
                   value={this.props.task.dueTime}
                   onChange={this.props.handleInputChange}
                 />
-              </Col>
+              </Col> */}
               <Col sm={{ size: 3 }} className="text-sm-end mt-3 mt-sm-0">
                 <Label check>
                   Remind Me?

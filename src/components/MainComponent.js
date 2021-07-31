@@ -27,6 +27,8 @@ import {
   deleteAllTasks,
   postNewProjectOrLabel,
   changeFilter,
+  changeSort,
+  changeSortOrder,
   editProject,
   editLabel,
   deleteProjectOrLabel,
@@ -63,6 +65,8 @@ const mapDispatchToProps = (dispatch) => {
     postNewProjectOrLabel: (userId, type, title) =>
       dispatch(postNewProjectOrLabel(userId, type, title)),
     changeFilter: (id) => dispatch(changeFilter(id)),
+    changeSort: (sort) => dispatch(changeSort(sort)),
+    changeSortOrder: (order) => dispatch(changeSortOrder(order)),
     editProject: (userId, id, title, createdAt) =>
       dispatch(editProject(userId, id, title, createdAt)),
     editLabel: (userId, id, title, createdAt) =>
@@ -120,6 +124,8 @@ class Main extends React.Component {
                   auth={this.props.auth}
                   fetchTasks={this.props.fetchTasks}
                   changeFilter={this.props.changeFilter}
+                  changeSort={this.props.changeSort}
+                  changeSortOrder={this.props.changeSortOrder}
                   changeComplete={this.props.changeComplete}
                 />
               )}

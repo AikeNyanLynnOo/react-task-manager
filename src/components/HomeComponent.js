@@ -15,6 +15,8 @@ import Loading from "./LoadingComponent";
 import Message from "./MessageComponent";
 import { Redirect } from "react-router-dom";
 import moment from "moment";
+import sortArray from "sort-array";
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -22,22 +24,44 @@ class Home extends React.Component {
   }
 
   handleChange(event) {
-    this.props.changeFilter(+event.target.value);
+    if (event.target.name === "filter") {
+      this.props.changeFilter(+event.target.value);
+    } else {
+      this.props.changeSort(event.target.value);
+    }
   }
 
   render() {
     if (!this.props.auth.isLoggedIn) {
       return <Redirect to="/login" />;
     }
-    const tasks = this.props.tasks.tasks.filter((task) =>
-      moment(task.dueDate).isAfter(moment(moment(), "days"))
+    const tasks = sortArray(
+      this.props.tasks.tasks.filter((task) =>
+        moment(task.dueDate).isAfter(moment(moment(), "days"))
+      ),
+      {
+        by: this.props.tasks.sort,
+        order: this.props.tasks.order,
+      }
     );
-    const dueTasks = this.props.tasks.tasks.filter((task) =>
-      moment(task.dueDate).isBefore(moment(moment(), "days"))
+    const dueTasks = sortArray(
+      this.props.tasks.tasks.filter((task) =>
+        moment(task.dueDate).isBefore(moment(moment(), "days"))
+      ),
+      {
+        by: this.props.tasks.sort,
+        order: this.props.tasks.order,
+      }
     );
-    const completedTasks = this.props.tasks.tasks.filter(
-      (task) => task.isComplete === "true"
+
+    const completedTasks = sortArray(
+      this.props.tasks.tasks.filter((task) => task.isComplete === "true"),
+      {
+        by: this.props.tasks.sort,
+        order: this.props.tasks.order,
+      }
     );
+
     let activeTasks = {};
     switch (this.props.tasks.filter) {
       case 1:
@@ -131,10 +155,61 @@ class Home extends React.Component {
               <Col lg={{ size: 12 }}>
                 <Card>
                   <CardBody>
-                    <CardTitle tag="h5">
-                      {activeTasks.filterType} - {activeTasks.tasks.length} task
-                      {activeTasks.tasks.length > 1 ? "s" : ""}
-                    </CardTitle>
+                    <div className="d-flex justify-content-between">
+                      <div>
+                        <Input
+                          type="select"
+                          name="sort"
+                          id="sort"
+                          className="form-select d-inline me-3"
+                          style={{ width: 10 + "em", cursor: "pointer" }}
+                          value={this.props.tasks.sort}
+                          onChange={this.handleChange}
+                        >
+                          {[
+                            { val: "dueDate", text: "Date" },
+                            { val: "progress", text: "Progress" },
+                            { val: "priority", text: "Priority" },
+                          ].map((sort, index) => {
+                            return (
+                              <option value={sort.val} key={index}>
+                                {sort.text}
+                              </option>
+                            );
+                          })}
+                        </Input>
+                        <i
+                          id="order"
+                          className={`bg-circle fa fa-sort-${this.props.tasks.order}`}
+                          onClick={() => {
+                            // document
+                            //   .getElementById("order")
+                            //   .classList.toggle("fa-sort-desc");
+                            // document
+                            //   .getElementById("order")
+                            //   .classList.toggle("fa-sort-asc");
+                            // this.props.changeSortOrder()
+                            if (
+                              document.getElementById("order").className ===
+                              "bg-circle fa fa-sort-desc"
+                            ) {
+                              this.props.changeSortOrder("asc");
+                            }
+                            if (
+                              document.getElementById("order").className ===
+                              "bg-circle fa fa-sort-asc"
+                            ) {
+                              this.props.changeSortOrder("desc");
+                            }
+                          }}
+                        ></i>
+                      </div>
+                      <CardTitle tag="h5" className="align-self-end">
+                        {activeTasks.filterType} - {activeTasks.tasks.length}{" "}
+                        task
+                        {activeTasks.tasks.length > 1 ? "s" : ""}
+                      </CardTitle>
+                    </div>
                     <hr className="mb-0" />
                     <List type="unstyled" className="my-task-list">
                       {!this.props.comments.isLoading &&

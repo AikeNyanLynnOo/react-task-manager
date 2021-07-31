@@ -232,10 +232,21 @@ export const deleteAllTasks = (auth) => (dispatch) => {
 
 // Tasks-methods
 export const changeFilter = (id) => {
-  console.log("ID IS" + id);
   return {
     type: ActionTypes.CHANGE_FILTER_TYPE,
     payload: id,
+  };
+};
+export const changeSort = (sort) => {
+  return {
+    type: ActionTypes.CHANGE_SORT_TYPE,
+    payload: sort,
+  };
+};
+export const changeSortOrder = (order) => {
+  return {
+    type: ActionTypes.CHANGE_ORDER_TYPE,
+    payload: order,
   };
 };
 

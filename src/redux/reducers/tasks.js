@@ -7,6 +7,8 @@ export const Tasks = (
     successMsg: null,
     tasks: [],
     filter: 0,
+    sort: "dueDate",
+    order: "desc",
   },
   action
 ) => {
@@ -71,6 +73,22 @@ export const Tasks = (
         errMsg: null,
         successMsg: null,
         filter: action.payload,
+      };
+    case ActionTypes.CHANGE_SORT_TYPE:
+      return {
+        ...state,
+        isLoading: false,
+        errMsg: null,
+        successMsg: null,
+        sort: action.payload,
+      };
+    case ActionTypes.CHANGE_ORDER_TYPE:
+      return {
+        ...state,
+        isLoading: false,
+        errMsg: null,
+        successMsg: null,
+        order: action.payload,
       };
     default:
       return state;

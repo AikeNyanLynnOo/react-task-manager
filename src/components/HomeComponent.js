@@ -162,7 +162,7 @@ class Home extends React.Component {
                           name="sort"
                           id="sort"
                           className="form-select d-inline me-3"
-                          style={{ width: 10 + "em", cursor: "pointer" }}
+                          style={{ width: 8 + "em", cursor: "pointer" }}
                           value={this.props.tasks.sort}
                           onChange={this.handleChange}
                         >
@@ -182,13 +182,6 @@ class Home extends React.Component {
                           id="order"
                           className={`bg-circle fa fa-sort-${this.props.tasks.order}`}
                           onClick={() => {
-                            // document
-                            //   .getElementById("order")
-                            //   .classList.toggle("fa-sort-desc");
-                            // document
-                            //   .getElementById("order")
-                            //   .classList.toggle("fa-sort-asc");
-                            // this.props.changeSortOrder()
                             if (
                               document.getElementById("order").className ===
                               "bg-circle fa fa-sort-desc"
@@ -205,7 +198,7 @@ class Home extends React.Component {
                         ></i>
                       </div>
                       <CardTitle tag="h5" className="align-self-end">
-                        {activeTasks.filterType} - {activeTasks.tasks.length}{" "}
+                        <span className="d-none d-sm-inline">{activeTasks.filterType} - </span>{activeTasks.tasks.length}{" "}
                         task
                         {activeTasks.tasks.length > 1 ? "s" : ""}
                       </CardTitle>

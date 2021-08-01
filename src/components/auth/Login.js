@@ -25,8 +25,7 @@ class Login extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     // login logic
-    const cipertxt = AES.encrypt(JSON.stringify(this.state), "123").toString();
-    localStorage.setItem("token", cipertxt);
+    
     this.props.loginUser(this.state);
   }
   render() {

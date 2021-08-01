@@ -26,11 +26,13 @@ class MenuBar extends React.Component {
   render() {
     return (
       <Navbar color="primary" expand="md" className="fixed-top px-5">
-        <NavbarBrand>
-          <NavLink to="/home" className="nav-link text-white">
-            To Do List
-          </NavLink>
-        </NavbarBrand>
+        <NavLink
+          to="/home"
+          className="nav-link text-white"
+          style={{ fontSize: 20+"px" }}
+        >
+          To Do List
+        </NavLink>
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="me-auto my-navbar" navbar>

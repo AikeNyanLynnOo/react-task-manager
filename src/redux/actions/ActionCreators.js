@@ -604,13 +604,23 @@ export const fetchUser = (user) => (dispatch) => {
       },
     })
     .then((res) => {
-      var bytes = CryptoJS.AES.decrypt(res.data[0].password, "123");
-      var pwd = bytes.toString(CryptoJS.enc.Utf8);
-      if (pwd === user.password) {
-        dispatch(fetchTasks(res.data[0].id));
-        dispatch(loginSuccess(res.data[0]));
+      if (res.data.length === 0) {
+        dispatch(
+          loginFailed(
+            "Account with your email does not exist! Please register first!"
+          )
+        );
       } else {
-        dispatch(loginFailed("Check your email or password"));
+        var bytes = CryptoJS.AES.decrypt(res.data[0].password, "123");
+        var pwd = bytes.toString(CryptoJS.enc.Utf8);
+        if (pwd === user.password) {
+          const cipertxt = AES.encrypt(JSON.stringify(user), "123").toString();
+          localStorage.setItem("token", cipertxt);
+          dispatch(fetchTasks(res.data[0].id));
+          dispatch(loginSuccess(res.data[0]));
+        } else {
+          dispatch(loginFailed("Check your email or password"));
+        }
       }
     })
     .catch((err) => {

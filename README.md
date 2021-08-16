@@ -13,6 +13,6 @@ Then start json-server `json-server --watch db.json --port 3001`<br/>
 
 In the project directory, you can run:
 
- `npm install`
+ `npm install`<br/>
  `npm start`
 

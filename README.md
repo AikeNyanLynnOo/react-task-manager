@@ -1,13 +1,13 @@
 
-Create a folder anywhere, and paste the following to db.json __
+Create a folder anywhere, and paste the following to db.json <br/>
 `{
   "tasks": [],
   "comments": [],
   "labels": [],
   "projects": [],
   "users": []
-}` __
-Then start json-server `json-server --watch db.json --port 3001`__
+}` <br/>
+Then start json-server `json-server --watch db.json --port 3001`<br/>
 
 In the project directory, you can run:
 
